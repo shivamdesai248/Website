@@ -1,0 +1,136 @@
+---
+/**
+ * /cpp — Embedded C++ hub. Intro + overview from src/content/cpp/index.md,
+ * then the numbered topic list (one row per src/content/cpp/<topic>/index.md).
+ */
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ArticleBody from '../ArticleBody.astro';
+import { getCppHome, getCppTopics } from '../../lib/content';
+import { url } from '../../lib/url';
+
+const home = await getCppHome();
+const topics = await getCppTopics();
+const { Content, headings } = await render(home);
+const d = home.data;
+const num = (i: number) => String(i + 1).padStart(2, '0');
+---
+<Base title={d.title} description={d.description}>
+  <section class="container head">
+    <p class="label">C++</p>
+    <h1 class="h-display title">{d.title}</h1>
+    <p class="intro">{d.intro}</p>
+    {topics.length > 0 && <a href="#topics" class="link-arrow jump">Jump to topics <span aria-hidden="true">↓</span></a>}
+  </section>
+
+  <ArticleBody headings={headings} extraToc={topics.length > 0 ? [{ slug: 'topics', text: 'Topics' }] : []}>
+    <Content />
+  </ArticleBody>
+
+  {
+    topics.length > 0 && (
+      <section class="container topics-wrap" aria-labelledby="topics">
+        <h2 id="topics" class="h-display topics-title">Topics</h2>
+        <ol class="topics">
+          {topics.map((t, i) => (
+            <li>
+              <a href={url(`/cpp/${t.id}`)}>
+                <span class="num">{num(i)}</span>
+                <span class="t-main">
+                  <span class="t-title">
+                    {t.data.title} <span class="arr" aria-hidden="true">↗</span>
+                  </span>
+                  <span class="t-desc">{t.data.description}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .head {
+    padding-top: clamp(32px, 6vw, 72px);
+    padding-bottom: 8px;
+  }
+  .title {
+    margin: 12px 0 18px;
+    font-size: clamp(40px, 6.4vw, 92px);
+  }
+  /* Same style as the summary on experience pages. */
+  .intro {
+    margin: 0 0 22px;
+    max-width: 680px;
+    font-size: clamp(18px, 1.6vw, 21px);
+    color: var(--fg-2);
+    line-height: 1.5;
+  }
+  .jump span {
+    color: var(--accent-ink);
+  }
+  .topics-wrap {
+    padding-bottom: clamp(64px, 8vw, 112px);
+    scroll-margin-top: var(--sticky-top);
+  }
+  .topics-title {
+    margin: 0 0 clamp(12px, 2vw, 20px);
+    font-size: clamp(28px, 3vw, 40px);
+  }
+  .topics {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .topics li {
+    border-top: 1px solid var(--line);
+  }
+  .topics a {
+    display: grid;
+    grid-template-columns: clamp(44px, 6vw, 96px) minmax(0, 1fr);
+    gap: 12px;
+    align-items: baseline;
+    padding-block: clamp(22px, 3vw, 34px);
+    text-decoration: none;
+    color: var(--fg);
+  }
+  .num {
+    font-size: clamp(15px, 1.4vw, 18px);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--accent-ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .t-main {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .t-title {
+    font-size: clamp(24px, 3.4vw, 44px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    transition: color 0.2s ease;
+  }
+  .arr {
+    color: var(--accent-ink);
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .t-desc {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 62ch;
+  }
+  .topics a:hover .t-title,
+  .topics a:focus-visible .t-title {
+    color: var(--accent-ink);
+  }
+  .topics a:hover .arr {
+    transform: translate(2px, -2px);
+  }
+</style>

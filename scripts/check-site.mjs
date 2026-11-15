@@ -40,7 +40,7 @@ for (const p of pages) {
 
 // 2. Optional pages and their nav links must appear together (flag on) or not at all (flag off).
 const home = existsSync(join(dist, 'index.html')) ? readFileSync(join(dist, 'index.html'), 'utf8') : '';
-for (const route of ['blog', 'design']) {
+for (const route of ['blog', 'design', 'cpp']) {
   const built = existsSync(join(dist, route, 'index.html'));
   const linked = new RegExp(`href="[^"]*/${route}/?"`).test(home);
   if (built !== linked) errors.push(`/${route}: page ${built ? 'built' : 'not built'} but nav link ${linked ? 'present' : 'missing'}`);

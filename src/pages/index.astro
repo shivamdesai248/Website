@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import SectionHeader from '../components/SectionHeader.astro';
+import { blogIntro, designIntro, designAbout } from '../data/intros';
 import ExperienceCard from '../components/ExperienceCard.astro';
 import PostCard from '../components/PostCard.astro';
 import Pill from '../components/Pill.astro';
@@ -49,7 +50,7 @@ const principles = [
   {
     site.features.design && designItems.length > 0 && (
       <section id="design" class="section container">
-        <SectionHeader num={n()} label="Design" title="Renders, posters and decks" linkHref={url('/design')} linkText="All design work" />
+        <SectionHeader num={n()} label="Design" title="Renders, posters and decks" intro={[designIntro, ...designAbout]} linkHref={url('/design')} linkText="All design work" />
         <div class="dgrid">
           {designItems.map((d) => (
             <a href={url('/design')} class:list={['dthumb', `fit-${d.data.fit}`]}>
@@ -105,8 +106,8 @@ const principles = [
 
   {
     site.features.blog && posts.length > 0 && (
-      <section id="writing" class="section container">
-        <SectionHeader num={n()} label="Writing" title="Latest posts" linkHref={url('/blog')} linkText="All posts" />
+      <section id="blog" class="section container">
+        <SectionHeader num={n()} label="Blog" title="Latest posts" intro={blogIntro} linkHref={url('/blog')} linkText="All posts" />
         <div class="pgrid">
           {posts.map((p) => <PostCard post={p} />)}
         </div>

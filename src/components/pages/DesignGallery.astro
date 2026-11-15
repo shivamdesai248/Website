@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { getDesignItems } from '../../lib/content';
 import { url } from '../../lib/url';
+import { designIntro, designAbout } from '../../data/intros';
 
 const items = await getDesignItems();
 ---
@@ -10,15 +11,9 @@ const items = await getDesignItems();
   <section class="container head">
     <p class="label">Design</p>
     <h1 class="h-display title">Renders, posters and decks</h1>
-    <p class="intro">Good engineering deserves good presentation. A collection of renders, posters and slide decks, and the tools behind them.</p>
+    <p class="intro">{designIntro}</p>
     <div class="prose about-design">
-      <p>
-        I'm not a professional designer, but I take pride in how my work is presented. I started with
-        renders in SolidWorks, using simple PNG renders to lift my presentations. Figma became another
-        favourite: I've used it for figures, posters and visuals. In my final year I picked up Blender,
-        for my capstone and for testing decals for SOAR's Aegis rocket.
-      </p>
-      <p>I want to keep improving and turn this from a hobby into a real skill.</p>
+      {designAbout.map((para) => <p>{para}</p>)}
     </div>
 
   </section>

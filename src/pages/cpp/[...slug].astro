@@ -1,0 +1,33 @@
+---
+/**
+ * Embedded C++ routes: /cpp (hub) and /cpp/<topic>.
+ * When features.cpp is false, getStaticPaths returns nothing, so no C++ page exists.
+ */
+import type { CollectionEntry } from 'astro:content';
+import { site } from '../../../site.config';
+import { getCppTopics } from '../../lib/content';
+import CppIndex from '../../components/pages/CppIndex.astro';
+import CppTopic from '../../components/pages/CppTopic.astro';
+
+export async function getStaticPaths() {
+  if (!site.features.cpp) return [];
+  const topics = await getCppTopics();
+  return [
+    { params: { slug: undefined }, props: {} },
+    ...topics.map((topic, i) => ({
+      params: { slug: topic.id },
+      props: { topic, index: i, total: topics.length, prev: topics[i - 1], next: topics[i + 1] },
+    })),
+  ];
+}
+
+interface Props {
+  topic?: CollectionEntry<'cpp'>;
+  index?: number;
+  total?: number;
+  prev?: CollectionEntry<'cpp'>;
+  next?: CollectionEntry<'cpp'>;
+}
+const { topic, index = 0, total = 0, prev, next } = Astro.props;
+---
+{topic ? <CppTopic topic={topic} index={index} total={total} prev={prev} next={next} /> : <CppIndex />}

@@ -1,0 +1,71 @@
+---
+/**
+ * Reading layout: sticky "On this page" list (h2s) beside the prose column.
+ * Used by the C++ pages. Pass rendered Markdown as the default slot.
+ * Optional `extraToc` adds links after the headings (e.g. a "Topics" section below the prose).
+ */
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+  extraToc?: { slug: string; text: string }[];
+}
+const { headings, extraToc = [] } = Astro.props;
+const toc = [...headings.filter((h) => h.depth === 2).map((h) => ({ slug: h.slug, text: h.text })), ...extraToc];
+---
+<div class="container body">
+  <aside class="toc" aria-label="On this page">
+    {
+      toc.length > 1 && (
+        <>
+          <p class="label">On this page</p>
+          <ul>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul>
+        </>
+      )
+    }
+  </aside>
+  <div class="prose">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .body {
+    display: grid;
+    grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 80px);
+    padding-block: clamp(40px, 6vw, 80px);
+  }
+  .toc {
+    position: sticky;
+    top: var(--sticky-top);
+    align-self: start;
+  }
+  .toc ul {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    border-left: 1px solid var(--line);
+  }
+  .toc li a {
+    display: block;
+    padding: 6px 0 6px 14px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14.5px;
+  }
+  .toc li a:hover {
+    color: var(--fg);
+  }
+  .body .prose > :global(:first-child) {
+    margin-top: 0;
+  }
+  @media (max-width: 900px) {
+    .body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .toc {
+      display: none;
+    }
+  }
+</style>

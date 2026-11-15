@@ -40,6 +40,8 @@ export const site = {
     blog: flag('SITE_BLOG', true),
     /** Design gallery page, nav link and home teaser. */
     design: flag('SITE_DESIGN', true),
+    /** Embedded C++ notes: /cpp hub, topic pages and nav link. */
+    cpp: flag('SITE_CPP', false),
     /** Light/dark toggle. When false the site is dark mode only. */
     themeToggle: flag('SITE_THEME_TOGGLE', true),
     /** Include posts/items marked `draft: true` (for previewing only — keep false). */

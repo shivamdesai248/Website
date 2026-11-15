@@ -14,5 +14,6 @@ export function navLinks(): NavLink[] {
   ];
   if (site.features.design) links.push({ label: 'Design', href: url('/design') });
   if (site.features.blog) links.push({ label: 'Blog', href: url('/blog') });
+  if (site.features.cpp) links.push({ label: 'C++', href: url('/cpp') });
   return links;
 }

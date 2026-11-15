@@ -51,6 +51,11 @@ Tick items as they're done and add a dated note at the end of each phase. A new 
 - [x] Design page from `src/content/design/*.md` (3 items)
 - [ ] **Needs Shivam:** tools used for the capstone poster (`src/content/design/capstone-poster.md`)
 
+## Phase 7b — Embedded C++ section (2026-11-15) ✅
+- [x] `/cpp` hub (intro, overview, numbered topic list) and six topic pages, behind `features.cpp` (nav link "C++")
+- [x] Documents section (PDFs/decks) on experience, sub-pages and blog posts; AstroPulse Final Design Report added (compressed 66 MB → 6 MB)
+- [ ] **Needs Shivam:** rewrite the hub overview and the six topic pages in his own words (current text is placeholder to show layout; each topic starts with a "Notes in progress" callout to remove)
+
 ## Phase 8 — Launch
 - [ ] Add `.github/workflows/deploy.yml` (couldn't be written remotely; the file was sent in the Claude chat on 2026-11-14 — same content as described in README)
 - [ ] On GitHub: Settings → Pages → Source: **GitHub Actions**

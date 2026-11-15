@@ -114,4 +114,33 @@ const design = defineCollection({
     }),
 });
 
-export const collections = { experience, tracks, blog, design };
+/** Embedded C++ hub page: src/content/cpp/index.md (intro + overview body). */
+const cppHome = defineCollection({
+  loader: glob({ pattern: 'index.{md,mdx}', base: './src/content/cpp' }),
+  schema: z.object({
+    title: z.string(),
+    /** Short statement under the title, styled like the experience-page summary. */
+    intro: z.string(),
+    description: z.string(),
+  }),
+});
+
+/** Embedded C++ topic pages: src/content/cpp/<topic>/index.md → /cpp/<topic> */
+const cpp = defineCollection({
+  loader: glob({ pattern: '*/index.{md,mdx}', base: './src/content/cpp', generateId: ({ entry }) => entry.split('/')[0] }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      /** Position in the topic list (1 = first). */
+      order: z.number(),
+      tags: z.array(z.string()).default([]),
+      updated: z.coerce.date().optional(),
+      cover: image().optional(),
+      coverAlt: z.string().optional(),
+      documents,
+      draft: z.boolean().default(false),
+    }),
+});
+
+export const collections = { experience, tracks, blog, design, cppHome, cpp };

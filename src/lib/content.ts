@@ -29,6 +29,17 @@ export async function getDesignItems(): Promise<CollectionEntry<'design'>[]> {
   );
 }
 
+/** Embedded C++ topic pages, in reading order. Empty when the C++ flag is off. */
+export async function getCppTopics(): Promise<CollectionEntry<'cpp'>[]> {
+  if (!site.features.cpp) return [];
+  return (await getCollection('cpp', (t) => showDrafts || !t.data.draft)).sort((a, b) => a.data.order - b.data.order);
+}
+
+/** The C++ hub page (src/content/cpp/index.md). */
+export async function getCppHome() {
+  return (await getCollection('cppHome'))[0];
+}
+
 export function readingTime(body = ''): string {
   const words = body.replace(/```[\s\S]*?```/g, ' ').split(/\s+/).filter(Boolean).length;
   return `${Math.max(1, Math.round(words / 220))} min read`;

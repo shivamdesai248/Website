@@ -21,7 +21,7 @@ Read this first in every session. Then read `docs/PROGRESS.md` to see where work
 4. **Fonts:** wordmark/name = Archivo Expanded Black (`font-display` / `.wordmark`); everything else = Inter Tight. Labels are small uppercase with `0.12em` tracking (`.label`). Self-hosted via `@fontsource-variable/*`; no Google Fonts.
 5. **Section names say "Experience", never "Projects"** (headings, nav links, section labels). The word is fine in body text. `npm run check` fails if a heading, nav link or label says "Projects".
 6. **No "open to opportunities" pill**, no location clock.
-7. **Feature flags live in `site.config.ts`** (`blog`, `design`, `themeToggle`). When a flag is off, its nav link, home section and routes must be absent from the built site, not hidden with CSS. Blog and design routes are `src/pages/blog/[...slug].astro` and `src/pages/design/[...index].astro`; their `getStaticPaths` return nothing when the flag is off (this also updates live in the dev server).
+7. **Feature flags live in `site.config.ts`** (`blog`, `design`, `cpp`, `themeToggle`). When a flag is off, its nav link, home section and routes must be absent from the built site, not hidden with CSS. Blog, design and C++ routes are `src/pages/blog/[...slug].astro`, `src/pages/design/[...index].astro` and `src/pages/cpp/[...slug].astro`; their `getStaticPaths` return nothing when the flag is off (this also updates live in the dev server).
 8. **Section numbers (`01 /`) are computed**, never hard-coded, so hiding a section leaves no gap.
 9. **Garmin content stays public-safe.** Don't name unreleased products or internal details.
 10. **Responsive:** every change must look right at 390 px (phone), 820 px (iPad portrait), 1180 px (iPad landscape), 1440 px and 1920 px.
@@ -33,11 +33,13 @@ Read this first in every session. Then read `docs/PROGRESS.md` to see where work
 - `src/layouts/Base.astro` — page shell, theme script, top bar, footer
 - `src/components/` — UI pieces (`TopBar`, `ThemeToggle.tsx`, `MobileMenu.tsx`, `Pill`, `SectionHeader`, …)
 - `src/data/resume.ts` — single source for the resume page and the home page skills
+- `src/data/intros.ts` — Blog and Design intro paragraphs, shown on those pages and under their home-page sections
 - `src/content/experience/<slug>/index.md` — AstroPulse, SOAR, Garmin pages
 - `src/content/experience/<slug>/<track>/index.md` — optional sub-pages ("tracks"), e.g. SOAR → embedded, mechanical. An experience with tracks renders as a hub (hero photo, intro, track cards). HTML comments (`<!-- note -->`) in Markdown are stripped from the published page, so use them for authoring notes.
 - `src/content/blog/<slug>/index.md` — blog posts (format: `docs/blog-post-template.md`)
+- `src/content/cpp/index.md` — Embedded C++ hub (frontmatter `title`, `intro`, `description`; body is the overview). `src/content/cpp/<topic>/index.md` — topic pages (`title`, `description`, `order`, optional `tags`, `updated`, `cover`, `documents`, `draft`); the folder name is the URL, `/cpp/<topic>`. Same Markdown features as blog posts.
 - `src/content/design/<slug>.md` — design gallery items
-- `src/components/pages/` — the blog index, blog post and design gallery page bodies, rendered by the flag-driven routes above
+- `src/components/pages/` — the blog index, blog post, design gallery, C++ hub (`CppIndex`) and C++ topic (`CppTopic`) page bodies, rendered by the flag-driven routes above
 
 ## Working method
 - Work phase by phase from `docs/PROGRESS.md`. Tick items off and add a dated note when a phase is done.
