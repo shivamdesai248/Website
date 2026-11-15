@@ -11,6 +11,7 @@ import Card from '../../components/Card.astro';
 import PhotoTitle from '../../components/PhotoTitle.astro';
 import ExperienceDetail from '../../components/ExperienceDetail.astro';
 import PostCard from '../../components/PostCard.astro';
+import Documents from '../../components/Documents.astro';
 import { getExperiences, getPosts, getTracks } from '../../lib/content';
 import { url } from '../../lib/url';
 
@@ -45,6 +46,7 @@ const nextLink = { href: url(`/experience/${next.id}`), title: next.data.title }
       coverAlt={d.coverAlt}
       coverFit={d.coverFit}
       gallery={d.gallery}
+      documents={d.documents}
       related={related}
       next={nextLink}
       heroPhoto={d.heroPhoto}
@@ -101,6 +103,8 @@ const nextLink = { href: url(`/experience/${next.id}`), title: next.data.title }
             />
           ))}
         </section>
+
+        {d.documents.length > 0 && <Documents items={d.documents} />}
 
         {related.length > 0 && (
           <section class="container related">

@@ -19,7 +19,7 @@ Read this first in every session. Then read `docs/PROGRESS.md` to see where work
 2. **One accent colour:** lime `#B8F23C`. Filled buttons use `--accent` with dark text; accent used as text or icons uses `--accent-ink`.
 3. **Dark mode is the default.** Light mode exists only when `features.themeToggle` is true.
 4. **Fonts:** wordmark/name = Archivo Expanded Black (`font-display` / `.wordmark`); everything else = Inter Tight. Labels are small uppercase with `0.12em` tracking (`.label`). Self-hosted via `@fontsource-variable/*`; no Google Fonts.
-5. **Never use the word "projects"** in visible text. Use "Experience". `npm run check` fails if "projects" appears in the built HTML.
+5. **Section names say "Experience", never "Projects"** (headings, nav links, section labels). The word is fine in body text. `npm run check` fails if a heading, nav link or label says "Projects".
 6. **No "open to opportunities" pill**, no location clock.
 7. **Feature flags live in `site.config.ts`** (`blog`, `design`, `themeToggle`). When a flag is off, its nav link, home section and routes must be absent from the built site, not hidden with CSS. Blog and design routes are `src/pages/blog/[...slug].astro` and `src/pages/design/[...index].astro`; their `getStaticPaths` return nothing when the flag is off (this also updates live in the dev server).
 8. **Section numbers (`01 /`) are computed**, never hard-coded, so hiding a section leaves no gap.

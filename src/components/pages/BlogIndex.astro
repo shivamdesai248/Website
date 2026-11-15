@@ -9,7 +9,13 @@ const posts = await getPosts();
   <section class="container head">
     <p class="label">Blog</p>
     <h1 class="h-display title">Notes from the bench</h1>
-    <p class="intro">Write-ups on firmware, rockets, thrusters and the tools I build along the way.</p>
+    <p class="intro">
+      At university I worked on a lot of designs and projects, almost always against tight deadlines. I tried to
+      approach each one from first principles, but real constraints often meant the pragmatic option had to take
+      over, and the goal became to make a working system. It kills me to leave them like that. This blog is my chance to
+      revisit those projects: how each one was designed, where pragmatism won out, and how I would rebuild it now
+      from the ground up into a deterministic, performant system.
+    </p>
   </section>
   <section class="container list" aria-label="Posts">
     {posts.length === 0 ? <p class="muted">The first post is on its way.</p> : posts.map((p) => <PostCard post={p} />)}
@@ -24,11 +30,13 @@ const posts = await getPosts();
     margin: 12px 0 16px;
     font-size: clamp(40px, 6.4vw, 92px);
   }
+  /* Same style as the summary on experience pages. */
   .intro {
     margin: 0;
-    max-width: 620px;
-    color: var(--muted);
-    font-size: 19px;
+    max-width: 680px;
+    font-size: clamp(18px, 1.6vw, 21px);
+    color: var(--fg-2);
+    line-height: 1.5;
   }
   .list {
     display: grid;

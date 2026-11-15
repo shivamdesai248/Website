@@ -25,11 +25,17 @@ function visibleText(html) {
 const pages = walk(dist).filter((f) => f.endsWith('.html'));
 if (pages.length === 0) errors.push(`No HTML found in ${dist}. Did the build run?`);
 
-// 1. Banned wording: never "projects" in visible text.
+// 1. Section names: headings, nav links and small section labels say "Experience", never "Projects".
+//    (The word is fine in body text, e.g. a blog intro.)
 for (const p of pages) {
-  const text = visibleText(readFileSync(p, 'utf8'));
-  const m = text.match(/.{0,40}\bprojects\b.{0,40}/i);
-  if (m) errors.push(`"projects" found in ${relative(dist, p)}: …${m[0].trim()}…`);
+  const html = readFileSync(p, 'utf8');
+  const named = [
+    ...html.matchAll(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/gi),
+    ...html.matchAll(/<nav[^>]*>([\s\S]*?)<\/nav>/gi),
+    ...html.matchAll(/<p[^>]*class="[^"]*\blabel\b[^"]*"[^>]*>([\s\S]*?)<\/p>/gi),
+  ].map((m) => visibleText(m[1]));
+  const hit = named.find((t) => /\bprojects\b/i.test(t));
+  if (hit) errors.push(`"Projects" used as a section name in ${relative(dist, p)}: ${hit.trim().slice(0, 80)}`);
 }
 
 // 2. Optional pages and their nav links must appear together (flag on) or not at all (flag off).

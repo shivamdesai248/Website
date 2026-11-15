@@ -1,0 +1,121 @@
+---
+/**
+ * Optional "Documents" section (see docs/DESIGN.md §5 "Documents").
+ * Big link rows in the "Next ↗" style: file type + size label, title, lime arrow.
+ * Files live in public/documents/<page>/; frontmatter gives the path relative to public/.
+ * PDFs open in a new tab; other types (e.g. .pptx) download.
+ */
+import { publicFileSize } from '../lib/file-info.mjs';
+import { url } from '../lib/url';
+
+export interface DocItem {
+  title: string;
+  file: string;
+  description?: string;
+}
+interface Props {
+  items: DocItem[];
+  title?: string;
+}
+const { items, title = 'Documents' } = Astro.props;
+
+const TYPES: Record<string, string> = {
+  '.pdf': 'PDF',
+  '.pptx': 'PowerPoint',
+  '.ppt': 'PowerPoint',
+  '.key': 'Keynote',
+  '.docx': 'Word',
+  '.xlsx': 'Excel',
+  '.zip': 'ZIP',
+};
+
+function fmtSize(bytes: number): string {
+  if (bytes >= 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+}
+
+const rows = items.map((d) => {
+  const rel = d.file.replace(/^\/+/, '');
+  const size = fmtSize(publicFileSize(rel));
+  const ext = (rel.match(/\.[^./]+$/)?.[0] ?? '').toLowerCase();
+  const isPdf = ext === '.pdf';
+  return {
+    ...d,
+    href: url(`/${rel}`),
+    meta: [TYPES[ext] ?? ext.slice(1).toUpperCase(), size].filter(Boolean).join(' · '),
+    isPdf,
+  };
+});
+---
+<section class="container docs-wrap" aria-labelledby="docs-title">
+  <h2 id="docs-title" class="h-display docs-title">{title}</h2>
+  <ul class="docs">
+    {
+      rows.map((r) => (
+        <li>
+          <a
+            href={r.href}
+            {...(r.isPdf ? { target: '_blank', rel: 'noopener' } : { download: '' })}
+          >
+            <span class="label">{r.meta}</span>
+            <span class="doc-title">
+              {r.title} <span class="arr" aria-hidden="true">↗</span>
+            </span>
+            {r.description && <span class="doc-desc">{r.description}</span>}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .docs-wrap {
+    padding-bottom: clamp(48px, 7vw, 96px);
+  }
+  .docs-title {
+    margin: 0 0 clamp(12px, 2vw, 20px);
+    font-size: clamp(28px, 3vw, 40px);
+  }
+  .docs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .docs li {
+    border-top: 1px solid var(--line);
+  }
+  .docs a {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-block: clamp(22px, 3vw, 34px);
+    text-decoration: none;
+    color: var(--fg);
+  }
+  .doc-title {
+    font-size: clamp(24px, 3.4vw, 44px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    transition: color 0.2s ease;
+  }
+  .arr {
+    color: var(--accent-ink);
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .doc-desc {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 62ch;
+  }
+  .docs a:hover .doc-title,
+  .docs a:focus-visible .doc-title {
+    color: var(--accent-ink);
+  }
+  .docs a:hover .arr {
+    transform: translate(2px, -2px);
+  }
+</style>

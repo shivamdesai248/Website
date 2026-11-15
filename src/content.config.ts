@@ -2,6 +2,14 @@ import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
+/**
+ * Optional Documents section (PDFs, decks). `file` is a path inside public/,
+ * e.g. "documents/astropulse/final-design-report.pdf". See docs/DESIGN.md "Documents".
+ */
+const documents = z
+  .array(z.object({ title: z.string(), file: z.string(), description: z.string().optional() }))
+  .default([]);
+
 const experienceSlugs = ['astropulse', 'soar', 'garmin'] as const;
 
 /** Experience pages: src/content/experience/<slug>/index.md */
@@ -26,6 +34,7 @@ const experience = defineCollection({
       gallery: z
         .array(z.object({ image: image(), alt: z.string(), caption: z.string().optional() }))
         .default([]),
+      documents,
       /**
        * Optional wide photo shown first on the page (e.g. a team photo). Used by
        * experience pages that are split into tracks (see the `tracks` collection).
@@ -61,6 +70,7 @@ const tracks = defineCollection({
       gallery: z
         .array(z.object({ image: image(), alt: z.string(), caption: z.string().optional() }))
         .default([]),
+      documents,
     }),
 });
 
@@ -78,6 +88,7 @@ const blog = defineCollection({
         experience: z.enum(experienceSlugs).optional(),
         cover: image().optional(),
         coverAlt: z.string().optional(),
+        documents,
         draft: z.boolean().default(false),
       })
       .refine((d) => !d.cover || !!d.coverAlt, { message: 'coverAlt is required when cover is set', path: ['coverAlt'] }),

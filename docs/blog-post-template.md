@@ -24,6 +24,7 @@ Checked on every build. A missing or wrong field stops the build with an error i
 | `experience` | no | `astropulse` / `soar` / `garmin` | Links the post to that experience page; the experience page lists it under related posts |
 | `cover` | no | `./image.jpg` | Shown at the top of the post and on cards |
 | `coverAlt` | with `cover` | text | Image description for accessibility |
+| `documents` | no | list | Optional Documents section after the post. Each item: `title`, `file` (path inside `public/`, e.g. `documents/my-post/slides.pdf`), optional `description`. PDFs open in a new tab, `.pptx` downloads |
 | `draft` | no | `true` / `false` | `true` = never built, even when the blog is on |
 
 ## Body

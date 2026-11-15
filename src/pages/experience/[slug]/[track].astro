@@ -39,6 +39,7 @@ const { Content } = await render(track);
   coverAlt={d.coverAlt}
   coverFit={d.coverFit}
   gallery={d.gallery}
+  documents={d.documents}
   next={next.id !== track.id ? { href: url(`/experience/${next.id}`), title: next.data.title, label: `More from ${parent.data.title}` } : undefined}
 >
   <Content />

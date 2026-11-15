@@ -18,6 +18,10 @@ stats:
   - { value: 22 mN, label: Design thrust }
   - { value: 1220 s, label: Specific impulse }
   - { value: '$5,000+', label: Raised from sponsors }
+documents:
+  - title: Final Design Report
+    file: documents/astropulse/astropulse-final-design-report.pdf
+    description: The full 138-page capstone report, from propulsion method selection and Hall thruster theory through design development and validation.
 gallery:
   - image: ./team-booth.jpg
     alt: The AstroPulse team at their booth, holding the thruster on its test stand

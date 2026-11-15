@@ -28,7 +28,7 @@ Inspiration: Lime Duo (limeduo.com), SpaceX, Anduril. Near-black, minimal, one g
 - Section headers: `01 / Label` + heading, optional "All … ↗" link on the right. Numbers are computed so hidden sections leave no gap.
 - No "open to opportunities" pill. No location clock.
 - Top bar: plain at the top of the page; stays pinned while scrolling (slim solid bar on desktop, small floating menu bubble on phones — added 2026-11-14). Name left, links centre (Experience, About, plus Blog/Design when enabled), right: theme toggle (when enabled) + lime Resume pill. Mobile: name, toggle, round menu button.
-- Wording: never "projects"; use "Experience".
+- Wording: section names (headings, nav, labels) say "Experience", not "Projects". The word is fine in body text.
 
 ## Theme toggle
 - Round sun/moon button beside Resume. Default dark. Choice remembered in `localStorage`.

@@ -9,6 +9,8 @@ import type { CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PostCard from './PostCard.astro';
 import PhotoTitle from './PhotoTitle.astro';
+import Gallery from './Gallery.astro';
+import Documents, { type DocItem } from './Documents.astro';
 
 interface Props {
   backHref: string;
@@ -23,6 +25,7 @@ interface Props {
   coverAlt?: string;
   coverFit?: 'cover' | 'contain';
   gallery?: { image: ImageMetadata; alt: string; caption?: string }[];
+  documents?: DocItem[];
   related?: CollectionEntry<'blog'>[];
   next?: { href: string; title: string; label?: string };
   /** Optional wide photo shown first, under the back link (e.g. a team photo). */
@@ -43,6 +46,7 @@ const {
   coverAlt = '',
   coverFit = 'cover',
   gallery = [],
+  documents = [],
   related = [],
   next,
   heroPhoto,
@@ -101,21 +105,11 @@ const {
     </div>
 
     {
-      gallery.length > 0 && (
-        <section class="container gallery-wrap" aria-label="Gallery">
-          <p class="label">Gallery</p>
-          <div class="gallery">
-            {gallery.map((g) => (
-              <figure>
-                <div class="g-img">
-                  <Image src={g.image} alt={g.alt} widths={[640, 1200]} sizes="(max-width: 760px) 100vw, 50vw" />
-                </div>
-                {g.caption && <figcaption>{g.caption}</figcaption>}
-              </figure>
-            ))}
-          </div>
-        </section>
-      )
+      gallery.length > 0 && <Gallery items={gallery} />
+    }
+
+    {
+      documents.length > 0 && <Documents items={documents} />
     }
 
     {
@@ -255,41 +249,8 @@ const {
     }
   }
 
-  .gallery-wrap,
   .related {
     padding-bottom: clamp(48px, 7vw, 96px);
-  }
-  .gallery {
-    margin-top: 18px;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
-  }
-  .gallery figure {
-    margin: 0;
-  }
-  .g-img {
-    aspect-ratio: 4 / 3;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    background: radial-gradient(ellipse at 50% 60%, var(--accent-soft), transparent 70%), var(--surface);
-  }
-  .g-img :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: 16px;
-  }
-  .gallery figcaption {
-    margin-top: 10px;
-    font-size: 14px;
-    color: var(--muted);
-  }
-  @media (max-width: 760px) {
-    .gallery {
-      grid-template-columns: minmax(0, 1fr);
-    }
   }
   .rgrid {
     margin-top: 18px;

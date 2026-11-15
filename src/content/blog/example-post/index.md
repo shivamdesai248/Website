@@ -10,7 +10,7 @@ tags: [reference]
 experience: astropulse       # links the post to /experience/astropulse (astropulse | soar | garmin)
 cover: ./cover.jpg           # image in this post's folder; used on the post and on cards
 coverAlt: "Cutaway render of the AstroPulse Hall effect thruster"
-draft: false                  # true = never published, even when the blog is on
+draft: true                  # true = never published, even when the blog is on
 ---
 
 Opening paragraph. Write in plain Markdown; the site applies the theme (fonts,

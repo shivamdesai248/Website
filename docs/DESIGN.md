@@ -100,11 +100,13 @@ Reuse these before writing new UI.
 | Experience write-up | `src/components/ExperienceDetail.astro` | Back link, header, stats strip, cover, tags + prose, gallery, related posts, next link. Used by experience pages and their tracks. |
 | Experience hub | `src/pages/experience/[slug].astro` | When an experience has tracks: back link, wide hero photo (16:7, 4:3 on phones, `heroPosition` sets the crop), title + intro side by side, then a 2-column grid of track cards (1 column on phones). |
 | Photo title | `src/components/PhotoTitle.astro` | Wide photo (16:7, 20px radius) with the page's label + `<h1>` laid over the bottom-left on a dark multi-stop fade. Desktop only (> 760px); on phones the text sits below the photo in normal colours. Text over the photo uses `--on-photo` / `--on-photo-muted` and the fade uses `--overlay-rgb`, which stay dark in both themes. See "When to use the photo title" below. |
+| Gallery | `src/components/Gallery.astro` | Section title (`.h-display`, `clamp(28px, 3vw, 40px)`) + masonry of photos (CSS columns, ~260px min, 16px gaps). Photos keep their own shape and fill their tile edge to edge: no glow, no padding, 14px radius, 1px `--line` border. Click opens a lightbox over a blurred page (`--overlay-rgb` at .55 + 18px blur) with prev/next, Esc and click-outside to close. |
+| Documents | `src/components/Documents.astro` | Optional section after the Gallery on experience, sub-page and blog pages, set by a `documents:` list in frontmatter (`title`, `file`, optional `description`). Same title style as Gallery. Each document is a full-width link row between 1px `--line` rules: small uppercase label with the type and size (worked out at build time, e.g. `PDF · 6.1 MB`), then a large title (`clamp(24px, 3.4vw, 44px)`, weight 500) with a lime `↗`, like the "Next" link. Hover turns the title `--accent-ink` and nudges the arrow. PDFs open in a new tab; other types (e.g. `.pptx`) download. Files live in `public/documents/<page>/`; compress big PDFs first (aim for under ~15 MB). |
 | Post card | `src/components/PostCard.astro` | Cover (16:10) + date/reading time label + title + description |
 | Tag | `.tag` | 1px `--line` border, pill radius, 13px, `--fg-2` |
 | Arrow link | `.link-arrow` | Text + `↗` in `--accent-ink` |
 | Round icon button | `.icon-btn` (in `TopBar`) | 42px circle, 1px `--line` border |
-| Top bar | `src/components/TopBar.astro` | Always fixed to the top. At the top of the page it's transparent over the hero. After scrolling: on desktop it becomes a slim bar (`rgba(var(--bg-rgb), var(--bar-alpha))` + `blur(var(--bar-blur))` + `--line` bottom border; dark .82 / 10px, light .62 / 8px so the frosted effect is visible in both); on phones (≤ 760px) it collapses to a single 48px floating menu bubble (`--surface`, `--line-strong` border) top-right. The phone menu opens as a full-screen frosted sheet (`rgba(var(--bg-rgb), .75)` + 22px blur, solid `--bg` fallback where blur isn't supported) rendered into `<body>`. Nav links, the theme/menu icon buttons and phone-menu links turn `--accent-ink` (green) on hover. Pages without a hero get a spacer so content starts below the bar. Anything `position: sticky` must use `top: var(--sticky-top)` so it sits below the bar. |
+| Top bar | `src/components/TopBar.astro` | Always fixed to the top. At the top of the page it's transparent over the hero. After scrolling: on desktop it becomes a slim bar (`rgba(var(--bg-rgb), var(--bar-alpha))` + `blur(var(--bar-blur))` + `--line` bottom border; dark .82 / 10px, light .62 / 8px so the frosted effect is visible in both); on phones (≤ 760px) it collapses to a single 48px floating menu bubble (`--surface`, `--line-strong` border) top-right. The phone menu opens as a full-screen frosted sheet (`rgba(var(--bg-rgb), .75)` + 22px blur, solid `--bg` fallback where blur isn't supported) rendered into `<body>`. Nav links, the theme/menu icon buttons and phone-menu links turn `--accent-ink` (green) on hover in dark mode. In light mode they use the signature lime `--accent` as a fill (nav links become a lime pill with dark text, icon buttons fill lime) or, for the large phone-menu links, a thick lime underline — never lime or dark-green text. Pages without a hero get a spacer so content starts below the bar. Anything `position: sticky` must use `top: var(--sticky-top)` so it sits below the bar. |
 
 **Radii:** pills/tags 999px · experience cards and cover images 20px · cards/galleries 16px · article figures 14px · code blocks and callouts 12px.
 
@@ -130,6 +132,10 @@ To turn it on for an experience page, set `heroPhoto`, `heroAlt` and optionally 
 - All images go through `astro:assets` (`<Image>` or Markdown images) for resizing; give every image real `alt` text.
 - Don't use third-party/copyrighted figures (textbook charts, other people's photos) without permission and a credit.
 
+## Scrollbar
+
+Thin (6px) square-edged lime scrollbar (no rounded corners) on a transparent track (`--accent` thumb, `--accent-ink` on hover), no arrow buttons, set globally in `global.css`. Keep `scrollbar-width`/`scrollbar-color` inside the Firefox-only `@supports not selector(::-webkit-scrollbar)` block: in Chrome/Edge they override the `::-webkit-scrollbar` rules and bring back square thumbs and arrows.
+
 ## 7. Motion
 
 - Subtle only: 0.2–0.25s ease transitions on colour/border; cards lift `translateY(-3px)`; images scale to `1.02–1.03` on hover; arrow icons nudge 1–2px.
@@ -138,7 +144,7 @@ To turn it on for an experience page, set `heroPhoto`, `heroAlt` and optionally 
 
 ## 8. Writing style in the UI
 
-- Never use the word **"projects"** — use "Experience" (enforced by `npm run check`).
+- Section names (headings, nav links, labels) say **"Experience"**, never "Projects" (enforced by `npm run check`). The word is fine in body text.
 - Short, plain labels; sentence case; no exclamation marks.
 - No "open to opportunities" pill, no location clock.
 - Contact is email and LinkedIn only.
@@ -156,5 +162,5 @@ To turn it on for an experience page, set `heroPhoto`, `heroAlt` and optionally 
 - [ ] Works in dark **and** light mode
 - [ ] Checked at 390 / 820 / 1180 / 1440 / 1920px
 - [ ] Reuses existing components and type classes
-- [ ] No "projects"; sentence case
+- [ ] Section names say "Experience", not "Projects"; sentence case
 - [ ] `npm run check` passes (and `npm run check:flags` if flags/routes changed)

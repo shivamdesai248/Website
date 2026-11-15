@@ -84,13 +84,15 @@ const links = navLinks();
   }
   .links {
     display: flex;
-    gap: 34px;
+    gap: 10px;
     font-size: 16px;
   }
   .links a {
     color: var(--fg-2);
     text-decoration: none;
-    transition: color 0.2s ease;
+    padding: 6px 12px;
+    border-radius: 999px;
+    transition: color 0.2s ease, background-color 0.2s ease;
   }
   .links a:hover,
   .links a:focus-visible {
@@ -122,6 +124,18 @@ const links = navLinks();
   .right :global(.icon-btn:hover) {
     border-color: var(--accent-ink);
     color: var(--accent-ink);
+  }
+  /* Light mode: lime text is unreadable on the light background, so hover uses the
+     signature lime as a fill instead (like the Resume button). */
+  :global([data-theme='light']) .links a:hover,
+  :global([data-theme='light']) .links a:focus-visible {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  :global([data-theme='light']) .right :global(.icon-btn:hover) {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
   }
   .right :global(.icon-btn svg) {
     width: 18px;
