@@ -1,0 +1,214 @@
+---
+import { site } from '../../site.config';
+import { navLinks } from '../lib/nav';
+import { url } from '../lib/url';
+import Pill from './Pill.astro';
+import ThemeToggle from './ThemeToggle';
+import MobileMenu from './MobileMenu';
+
+/**
+ * Top bar. Always fixed to the top of the screen.
+ * - overlay: floats over the page (home hero) instead of reserving space.
+ * - Once the page is scrolled (data-scrolled):
+ *   desktop → a solid bar stays at the top;
+ *   phone   → collapses to a small floating menu bubble.
+ */
+interface Props {
+  overlay?: boolean;
+}
+const { overlay = false } = Astro.props;
+const links = navLinks();
+---
+{!overlay && <div class="topbar-spacer" aria-hidden="true" />}
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a href={url('/')} class="wordmark brand" aria-label={`${site.name}, home`}>{site.name}</a>
+    <nav class="links" aria-label="Main">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+    <div class="right">
+      {site.features.themeToggle && <ThemeToggle client:load />}
+      <Pill href={url('/resume')} size="sm" class="resume">Resume</Pill>
+      <MobileMenu client:idle links={links} resumeHref={url('/resume')} />
+    </div>
+  </div>
+</header>
+
+<script>
+  // Mark the bar as scrolled once the page moves, so it can change style.
+  const bar = document.querySelector<HTMLElement>('.topbar');
+  if (bar) {
+    const update = () => bar.toggleAttribute('data-scrolled', window.scrollY > 24);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+  }
+</script>
+
+<style>
+  .topbar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 40;
+    border-bottom: 1px solid transparent;
+    transition: background-color 0.25s ease, border-color 0.25s ease, backdrop-filter 0.25s ease;
+  }
+  /* Reserves the bar's height on pages without a full-screen hero. */
+  .topbar-spacer {
+    height: 90px;
+  }
+  .topbar-inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+    padding-block: 24px;
+    transition: padding 0.25s ease;
+  }
+
+  /* Desktop: after scrolling, a solid bar stays pinned to the top. */
+  .topbar[data-scrolled] {
+    background: rgba(var(--bg-rgb), var(--bar-alpha));
+    -webkit-backdrop-filter: blur(var(--bar-blur));
+    backdrop-filter: blur(var(--bar-blur));
+    border-bottom-color: var(--line);
+  }
+  .topbar[data-scrolled] .topbar-inner {
+    padding-block: 12px;
+  }
+
+  .brand {
+    font-size: 17px;
+    text-decoration: none;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .links {
+    display: flex;
+    gap: 34px;
+    font-size: 16px;
+  }
+  .links a {
+    color: var(--fg-2);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .links a:hover,
+  .links a:focus-visible {
+    color: var(--accent-ink);
+  }
+  .right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  /* Round icon buttons (theme toggle, menu) */
+  .right :global(.icon-btn) {
+    position: relative;
+    z-index: 2;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--fg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.25s ease, width 0.25s ease, height 0.25s ease;
+  }
+  .right :global(.icon-btn:hover) {
+    border-color: var(--accent-ink);
+    color: var(--accent-ink);
+  }
+  .right :global(.icon-btn svg) {
+    width: 18px;
+    height: 18px;
+  }
+  .right :global(.icon-btn.menu-btn) {
+    display: none;
+  }
+  :global([data-theme='dark'] .icon-moon),
+  :global([data-theme='light'] .icon-sun) {
+    display: none;
+  }
+  .right :global(.bars) {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .right :global(.bars i) {
+    display: block;
+    width: 16px;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.25s ease;
+  }
+  .right :global(.bars-open i:first-child) {
+    transform: translateY(3.25px) rotate(45deg);
+  }
+  .right :global(.bars-open i:last-child) {
+    transform: translateY(-3.25px) rotate(-45deg);
+  }
+
+  /* While the phone menu is open the bar goes clear so the frosted menu sheet
+     (global.css .mobile-sheet) shows behind it as one continuous surface. */
+  .topbar[data-menu-open] {
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-bottom-color: var(--line);
+  }
+  .brand {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ───── Phone ───── */
+  @media (max-width: 760px) {
+    .topbar-spacer {
+      height: 78px;
+    }
+    .topbar-inner {
+      grid-template-columns: 1fr auto;
+      padding-block: 18px;
+    }
+    .links,
+    .right :global(.resume) {
+      display: none;
+    }
+    .right :global(.icon-btn.menu-btn) {
+      display: inline-flex;
+    }
+
+    /* After scrolling: no bar, just a small floating menu bubble. */
+    .topbar[data-scrolled]:not([data-menu-open]) {
+      background: transparent;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      border-bottom-color: transparent;
+      pointer-events: none;
+    }
+    .topbar[data-scrolled]:not([data-menu-open]) .topbar-inner {
+      padding-block: 14px;
+    }
+    .topbar[data-scrolled]:not([data-menu-open]) .brand,
+    .topbar[data-scrolled]:not([data-menu-open]) .right :global(.theme-toggle) {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .topbar[data-scrolled]:not([data-menu-open]) .right :global(.menu-btn) {
+      pointer-events: auto;
+      width: 48px;
+      height: 48px;
+      background: var(--surface);
+      border-color: var(--line-strong);
+    }
+    .brand,
+    .right :global(.theme-toggle) {
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+  }
+</style>

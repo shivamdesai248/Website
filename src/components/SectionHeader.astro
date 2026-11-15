@@ -1,0 +1,39 @@
+---
+/** "01 / Label" + heading, with an optional link on the right. */
+interface Props {
+  num: string;
+  label: string;
+  title: string;
+  linkHref?: string;
+  linkText?: string;
+}
+const { num, label, title, linkHref, linkText } = Astro.props;
+---
+<header class="sh">
+  <div>
+    <p class="label sh-label"><span class="sh-num">{num}</span> / {label}</p>
+    <h2 class="h-display sh-title">{title}</h2>
+  </div>
+  {linkHref && <a class="link-arrow" href={linkHref}>{linkText}<span aria-hidden="true">↗</span></a>}
+</header>
+<style>
+  .sh {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: clamp(28px, 4vw, 48px);
+    flex-wrap: wrap;
+  }
+  .sh-label {
+    margin: 0 0 10px;
+  }
+  .sh-num {
+    color: var(--accent-ink);
+  }
+  .sh-title {
+    margin: 0;
+    font-size: clamp(32px, 4.4vw, 56px);
+    max-width: 18ch;
+  }
+</style>

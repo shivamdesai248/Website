@@ -1,0 +1,182 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../../site.config';
+import { url } from '../lib/url';
+import { roles, education, skills } from '../data/resume';
+const [first, last] = site.name.toUpperCase().split(' ');
+---
+<Base title="Resume" description={`Resume of ${site.name}, ${site.role}.`}>
+  <div class="container resume">
+    <header class="r-head">
+      <h1 class="wordmark r-name">{first} {last}</h1>
+      <p class="r-role">{site.role}</p>
+      <ul class="r-contact">
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li><a href={site.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+      </ul>
+    </header>
+
+    <section class="r-section" aria-labelledby="exp">
+      <h2 id="exp" class="label r-h">Experience</h2>
+      <ol class="timeline">
+        {
+          roles.map((r) => (
+            <li class="role">
+              <p class="label when">{r.period}</p>
+              <div>
+                <h3 class="r-title">{r.title}</h3>
+                <p class="r-org">
+                  {r.experience ? <a href={url(`/experience/${r.experience}`)}>{r.org} <span aria-hidden="true">↗</span></a> : r.org}
+                  {r.team && <span class="muted"> · {r.team}</span>}
+                </p>
+                <ul class="bullets">
+                  {r.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="r-section" aria-labelledby="edu">
+      <h2 id="edu" class="label r-h">Education</h2>
+      <div class="role">
+        <p class="label when">{education.period}</p>
+        <div>
+          <h3 class="r-title">{education.degree}</h3>
+          <p class="r-org">{education.school}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="r-section" aria-labelledby="sk">
+      <h2 id="sk" class="label r-h">Skills</h2>
+      <dl class="r-skills">
+        {
+          skills.map((g) => (
+            <div class="role">
+              <dt class="label when">{g.name}</dt>
+              <dd>{g.items.map((s) => <span class="tag">{s}</span>)}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .resume {
+    max-width: 1100px;
+    padding-top: clamp(32px, 6vw, 72px);
+    padding-bottom: clamp(64px, 8vw, 112px);
+  }
+  .r-head {
+    padding-bottom: 36px;
+    border-bottom: 1px solid var(--line);
+  }
+  .r-name {
+    margin: 0 0 14px;
+    font-size: clamp(40px, 7vw, 88px);
+  }
+  .r-role {
+    margin: 0 0 18px;
+    font-size: 20px;
+    color: var(--fg-2);
+  }
+  .r-contact {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+  .r-contact a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-ink);
+    text-underline-offset: 4px;
+  }
+  .r-section {
+    padding-top: 44px;
+  }
+  .r-h {
+    margin: 0 0 8px;
+    color: var(--accent-ink);
+  }
+  .timeline,
+  .r-skills {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .role {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 24px;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .when {
+    margin: 4px 0 0;
+  }
+  .r-title {
+    margin: 0 0 4px;
+    font-size: 21px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .r-org {
+    margin: 0;
+    font-size: 16px;
+  }
+  .r-org a {
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .r-org a span {
+    color: var(--accent-ink);
+  }
+  .r-org a:hover {
+    color: var(--accent-ink);
+  }
+  .bullets {
+    margin: 14px 0 0;
+    padding-left: 1.1em;
+    color: var(--fg-2);
+    font-size: 16px;
+  }
+  .bullets li {
+    margin-top: 6px;
+  }
+  .bullets li::marker {
+    color: var(--accent-ink);
+  }
+  .r-skills dd {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  @media (max-width: 700px) {
+    .role {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+  }
+
+  @media print {
+    :global(.topbar),
+    :global(.footer) {
+      display: none;
+    }
+    .resume {
+      padding: 0;
+    }
+  }
+</style>

@@ -1,0 +1,177 @@
+---
+import { Image } from 'astro:assets';
+import { site } from '../../site.config';
+import { url } from '../lib/url';
+import Pill from './Pill.astro';
+import night from '../assets/hero/launch-night.jpg';
+import day from '../assets/hero/launch-day.jpg';
+
+/** Caption shown vertically at the right edge of the photo. TODO: confirm rocket/launch name. */
+const caption = 'SOAR · Ouroboros launch';
+const [first, last] = site.name.toUpperCase().split(' ');
+---
+<section class="hero" aria-labelledby="hero-name">
+  <div class="photo" aria-hidden="true">
+    <Image src={night} alt="" class="photo-img theme-dark-only" loading="eager" fetchpriority="high" widths={[480, night.width]} sizes="(max-width: 700px) 100vw, 60vw" />
+    {site.features.themeToggle && <Image src={day} alt="" class="photo-img theme-light-only" loading="lazy" widths={[480, day.width]} sizes="(max-width: 700px) 100vw, 60vw" />}
+  </div>
+  <span class="label caption">{caption}</span>
+
+  <div class="container content">
+    <p class="label role">{site.role}</p>
+    <h1 id="hero-name" class="wordmark name">{first}<br />{last}</h1>
+    <p class="h-display headline">Code that flies,<br />hardware that works.</p>
+    <p class="intro">Firmware at Garmin, hybrid rocket avionics at SOAR, and a Hall effect thruster built from scratch.</p>
+    <div class="ctas">
+      <Pill href={url('/#experience')}>See experience</Pill>
+      <Pill href={`mailto:${site.email}`} variant="secondary">Get in touch</Pill>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: max(100svh, 680px);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Photo fills the right side and bleeds off the top, right and bottom edges. */
+  .photo {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 58%;
+    z-index: -1;
+  }
+  .photo :global(.photo-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 55% 40%;
+  }
+  /* Gradual fade into the page on the left (many stops = no visible edge), and at the bottom. */
+  .photo::before,
+  .photo::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+  }
+  .photo::before {
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      var(--bg) 0%,
+      rgba(var(--bg-rgb), 0.92) 12%,
+      rgba(var(--bg-rgb), 0.7) 24%,
+      rgba(var(--bg-rgb), 0.42) 36%,
+      rgba(var(--bg-rgb), 0.18) 48%,
+      rgba(var(--bg-rgb), 0.05) 58%,
+      rgba(var(--bg-rgb), 0) 66%
+    );
+  }
+  /*
+   * Bottom fade: tall, multi-stop and eased (like the left fade) so there's no visible
+   * line where the photo ends. To undo, replace this rule with the previous version:
+   *   .photo::after { left: 0; right: 0; bottom: 0; height: 22%;
+   *     background: linear-gradient(to top, var(--bg), rgba(var(--bg-rgb), 0)); }
+   */
+  .photo::after {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 45%;
+    background: linear-gradient(
+      to top,
+      var(--bg) 0%,
+      var(--bg) 8%,
+      rgba(var(--bg-rgb), 0.9) 20%,
+      rgba(var(--bg-rgb), 0.7) 34%,
+      rgba(var(--bg-rgb), 0.45) 50%,
+      rgba(var(--bg-rgb), 0.22) 66%,
+      rgba(var(--bg-rgb), 0.08) 82%,
+      rgba(var(--bg-rgb), 0) 100%
+    );
+  }
+
+  .caption {
+    position: absolute;
+    right: clamp(20px, 4vw, 56px);
+    top: 50%;
+    writing-mode: vertical-rl;
+    color: var(--caption);
+  }
+
+  .content {
+    padding-top: 120px;
+    padding-bottom: 80px;
+  }
+  .role {
+    margin: 0 0 14px;
+  }
+  .name {
+    margin: 0 0 30px;
+    font-size: clamp(56px, 9vw, 140px);
+  }
+  .headline {
+    margin: 0 0 14px;
+    font-size: clamp(30px, 3.2vw, 46px);
+  }
+  .intro {
+    margin: 0 0 30px;
+    max-width: 470px;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  .ctas {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  /* iPad portrait: wider photo */
+  @media (min-width: 701px) and (max-width: 1100px) {
+    .photo {
+      width: 72%;
+    }
+  }
+
+  /* Phone: photo across the top, text below */
+  @media (max-width: 700px) {
+    .hero {
+      display: block;
+      min-height: 0;
+    }
+    .photo {
+      left: 0;
+      bottom: auto;
+      width: 100%;
+      height: 62svh;
+    }
+    .photo::before {
+      display: none;
+    }
+    .photo::after {
+      height: 50%;
+    }
+    .caption {
+      display: none;
+    }
+    .content {
+      padding-top: calc(62svh - 150px);
+      padding-bottom: 56px;
+    }
+    .name {
+      font-size: 15.5vw;
+      margin-bottom: 18px;
+    }
+    .intro {
+      font-size: 16px;
+    }
+  }
+</style>

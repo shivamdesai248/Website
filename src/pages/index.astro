@@ -1,0 +1,267 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import ExperienceCard from '../components/ExperienceCard.astro';
+import PostCard from '../components/PostCard.astro';
+import Pill from '../components/Pill.astro';
+import { site } from '../../site.config';
+import { url } from '../lib/url';
+import { getExperiences, getPosts, getDesignItems, sectionCounter } from '../lib/content';
+import { skills } from '../data/resume';
+
+const experiences = await getExperiences();
+const posts = (await getPosts()).slice(0, 3);
+const designItems = (await getDesignItems()).slice(0, 3);
+const n = sectionCounter();
+
+/** DRAFT copy — Shivam to review and rewrite in his own words. */
+const principles = [
+  {
+    title: 'Work across the boundary',
+    body: "Firmware bugs are often electrical problems, and mechanical constraints shape the software. I'd rather understand the whole system than pass problems over a wall.",
+  },
+  {
+    title: 'Test on real hardware early',
+    body: 'Simulation sets the direction; measurements decide. Whether it’s a magnetic field model or a sensor driver, I validate against the real thing as soon as I can.',
+  },
+  {
+    title: 'Build tools that remove friction',
+    body: 'Mock frameworks like FARM, automated test suites, and now AI agents: if a task keeps repeating, I try to make it disappear.',
+  },
+  {
+    title: 'Make it clear to others',
+    body: 'Design reviews, posters and renders are part of the engineering. If people can’t understand a design, they can’t trust it.',
+  },
+];
+---
+<Base overlayNav>
+  <Hero />
+
+  <section id="experience" class="section container">
+    <SectionHeader num={n()} label="Experience" title="Where I’ve done my best work" />
+    <div class="xgrid">
+      {experiences.map((e) => <ExperienceCard entry={e} />)}
+    </div>
+  </section>
+
+  {
+    site.features.design && designItems.length > 0 && (
+      <section id="design" class="section container">
+        <SectionHeader num={n()} label="Design" title="Renders, posters and decks" linkHref={url('/design')} linkText="All design work" />
+        <div class="dgrid">
+          {designItems.map((d) => (
+            <a href={url('/design')} class:list={['dthumb', `fit-${d.data.fit}`]}>
+              <Image src={d.data.image} alt={d.data.alt} widths={[480, 800]} sizes="(max-width: 760px) 100vw, 33vw" />
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section id="about" class="section container">
+    <SectionHeader num={n()} label="About" title="How I work" />
+    <div class="about">
+      <div class="about-intro">
+        <p>
+          I’m an embedded software engineer with a mechatronics background. I studied software engineering at the University of Calgary, but my favourite work has always been where code meets hardware: rocket avionics, a plasma thruster, and wearable sensors.
+        </p>
+        <p class="muted">
+          Today I write firmware at Garmin. Outside work I’m still building things with SOAR, and still most interested in problems that need software, electronics and mechanical design at the same time.
+        </p>
+      </div>
+      <ol class="principles">
+        {
+          principles.map((p, i) => (
+            <li>
+              <span class="label p-num">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3>{p.title}</h3>
+                <p>{p.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section id="skills" class="section container">
+    <SectionHeader num={n()} label="Skills" title="Tools of the trade" linkHref={url('/resume')} linkText="Full resume" />
+    <dl class="skills">
+      {
+        skills.map((g) => (
+          <div class="skill-row">
+            <dt>{g.name}</dt>
+            <dd>{g.items.map((s) => <span class="tag">{s}</span>)}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+
+  {
+    site.features.blog && posts.length > 0 && (
+      <section id="writing" class="section container">
+        <SectionHeader num={n()} label="Writing" title="Latest posts" linkHref={url('/blog')} linkText="All posts" />
+        <div class="pgrid">
+          {posts.map((p) => <PostCard post={p} />)}
+        </div>
+      </section>
+    )
+  }
+
+  <section id="contact" class="section container contact">
+    <p class="label"><span class="accent">{n()}</span> / Contact</p>
+    <h2 class="h-display contact-title">Let’s build something.</h2>
+    <p class="muted contact-sub">The best way to reach me is email. I’m also on LinkedIn.</p>
+    <div class="ctas">
+      <Pill href={`mailto:${site.email}`}>{site.email}</Pill>
+      <Pill href={site.linkedin} variant="secondary" external>LinkedIn</Pill>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .xgrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .dgrid,
+  .pgrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .dthumb {
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+  .dthumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .dthumb.fit-contain :global(img) {
+    object-fit: contain;
+    padding: 16px;
+  }
+  @media (max-width: 1100px) {
+    .xgrid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 760px) {
+    .xgrid,
+    .dgrid,
+    .pgrid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: clamp(32px, 6vw, 96px);
+  }
+  .about-intro p {
+    margin: 0 0 18px;
+    font-size: clamp(19px, 1.6vw, 22px);
+    line-height: 1.55;
+  }
+  .about-intro p.muted {
+    font-size: 17px;
+  }
+  .principles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .principles li {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 12px;
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
+  }
+  .principles li:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .p-num {
+    color: var(--accent-ink);
+    padding-top: 5px;
+  }
+  .principles h3 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .principles p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 16px;
+  }
+  @media (max-width: 900px) {
+    .about {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .skills {
+    margin: 0;
+  }
+  .skill-row {
+    display: grid;
+    grid-template-columns: minmax(180px, 280px) minmax(0, 1fr);
+    gap: 16px;
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+  }
+  .skill-row:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .skill-row dt {
+    font-weight: 500;
+    font-size: 17px;
+  }
+  .skill-row dd {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  @media (max-width: 700px) {
+    .skill-row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+    }
+  }
+
+  .contact {
+    border-top: 1px solid var(--line);
+  }
+  .accent {
+    color: var(--accent-ink);
+  }
+  .contact-title {
+    margin: 12px 0 14px;
+    font-size: clamp(44px, 7vw, 104px);
+  }
+  .contact-sub {
+    margin: 0 0 30px;
+    font-size: 18px;
+  }
+  .ctas {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+</style>

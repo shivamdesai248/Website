@@ -1,0 +1,48 @@
+---
+import { site } from '../../site.config';
+import { url } from '../lib/url';
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="container footer-inner">
+    <a href={url('/')} class="wordmark brand">{site.name}</a>
+    <nav class="footer-links" aria-label="Footer">
+      <a href={`mailto:${site.email}`}>Email</a>
+      <a href={site.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href={url('/resume')}>Resume</a>
+    </nav>
+    <p class="label copy">© {year} {site.name}</p>
+  </div>
+</footer>
+<style>
+  .footer {
+    border-top: 1px solid var(--line);
+  }
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding-block: 32px;
+  }
+  .brand {
+    font-size: 15px;
+    text-decoration: none;
+  }
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    font-size: 15px;
+  }
+  .footer-links a {
+    color: var(--fg-2);
+    text-decoration: none;
+  }
+  .footer-links a:hover {
+    color: var(--accent-ink);
+  }
+  .copy {
+    margin: 0;
+  }
+</style>

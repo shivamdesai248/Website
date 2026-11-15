@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../PostCard.astro';
+import { getPosts } from '../../lib/content';
+
+const posts = await getPosts();
+---
+<Base title="Blog" description="Write-ups on embedded software, rockets and hardware by Shivam Desai.">
+  <section class="container head">
+    <p class="label">Blog</p>
+    <h1 class="h-display title">Notes from the bench</h1>
+    <p class="intro">Write-ups on firmware, rockets, thrusters and the tools I build along the way.</p>
+  </section>
+  <section class="container list" aria-label="Posts">
+    {posts.length === 0 ? <p class="muted">The first post is on its way.</p> : posts.map((p) => <PostCard post={p} />)}
+  </section>
+</Base>
+<style>
+  .head {
+    padding-top: clamp(32px, 6vw, 72px);
+    padding-bottom: 40px;
+  }
+  .title {
+    margin: 12px 0 16px;
+    font-size: clamp(40px, 6.4vw, 92px);
+  }
+  .intro {
+    margin: 0;
+    max-width: 620px;
+    color: var(--muted);
+    font-size: 19px;
+  }
+  .list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 32px 20px;
+    padding-bottom: clamp(64px, 8vw, 112px);
+  }
+</style>

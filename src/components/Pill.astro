@@ -1,0 +1,79 @@
+---
+/** Pill button with a round arrow badge. variant="primary" is lime; "secondary" is outlined. */
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary';
+  size?: 'sm' | 'md';
+  external?: boolean;
+  class?: string;
+}
+const { href, variant = 'primary', size = 'md', external = false, class: cls = '' } = Astro.props;
+---
+<a
+  href={href}
+  class:list={['pill', `pill-${variant}`, `pill-${size}`, cls]}
+  {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+>
+  <span class="pill-text"><slot /></span>
+  <span class="pill-dot" aria-hidden="true">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 11 11 5M6 5h5v5" /></svg>
+  </span>
+</a>
+<style>
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 999px;
+    padding: 5px 5px 5px 20px;
+    font-weight: 500;
+    font-size: 16px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  }
+  .pill-sm {
+    font-size: 15px;
+    padding: 4px 4px 4px 16px;
+    gap: 10px;
+  }
+  .pill-primary {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .pill-secondary {
+    border: 1px solid var(--line-strong);
+    color: var(--fg);
+  }
+  .pill-secondary:hover {
+    border-color: var(--fg);
+  }
+  .pill-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .pill-sm .pill-dot {
+    width: 32px;
+    height: 32px;
+  }
+  .pill-primary .pill-dot {
+    background: var(--on-accent);
+    color: var(--accent);
+  }
+  .pill-secondary .pill-dot {
+    border: 1px solid var(--line-strong);
+  }
+  .pill-dot svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.2s ease;
+  }
+  .pill:hover .pill-dot svg {
+    transform: translate(1px, -1px) rotate(0deg) scale(1.1);
+  }
+</style>

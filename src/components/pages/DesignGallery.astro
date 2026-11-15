@@ -1,0 +1,105 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { getDesignItems } from '../../lib/content';
+import { url } from '../../lib/url';
+
+const items = await getDesignItems();
+---
+<Base title="Design" description="Renders, posters and presentations by Shivam Desai.">
+  <section class="container head">
+    <p class="label">Design</p>
+    <h1 class="h-display title">Renders, posters and decks</h1>
+    <p class="intro">Good engineering deserves good presentation. A collection of renders, posters and slide decks, and the tools behind them.</p>
+    <div class="prose about-design">
+      <p>
+        I'm not a professional designer, but I take pride in how my work is presented. I started with
+        renders in SolidWorks, using simple PNG renders to lift my presentations. Figma became another
+        favourite: I've used it for figures, posters and visuals. In my final year I picked up Blender,
+        for my capstone and for testing decals for SOAR's Aegis rocket.
+      </p>
+      <p>I want to keep improving and turn this from a hobby into a real skill.</p>
+    </div>
+
+  </section>
+  <section class="container grid" aria-label="Design work">
+    {
+      items.map((d) => (
+        <figure class="item">
+          <a class:list={['frame', `fit-${d.data.fit}`]} href={d.data.href ?? d.data.image.src} target="_blank" rel="noopener">
+            <Image src={d.data.image} alt={d.data.alt} widths={[640, 1200, 1800]} sizes="(max-width: 760px) 100vw, 50vw" />
+          </a>
+          <figcaption>
+            <span class="label">{d.data.kind}{d.data.tools.length > 0 && ` · ${d.data.tools.join(', ')}`}</span>
+            <span class="name">{d.data.title}</span>
+            {d.data.experience && <a class="link-arrow" href={url(`/experience/${d.data.experience}`)}>Related experience<span aria-hidden="true">↗</span></a>}
+          </figcaption>
+        </figure>
+      ))
+    }
+  </section>
+</Base>
+<style>
+  .head {
+    padding-top: clamp(32px, 6vw, 72px);
+    padding-bottom: 40px;
+  }
+  .title {
+    margin: 12px 0 16px;
+    font-size: clamp(40px, 6.4vw, 92px);
+  }
+  .about-design {
+    margin-top: 24px;
+  }
+  .intro {
+    margin: 0;
+    max-width: 620px;
+    color: var(--muted);
+    font-size: 19px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 20px;
+    padding-bottom: clamp(64px, 8vw, 112px);
+  }
+  .item {
+    margin: 0;
+  }
+  .frame {
+    display: block;
+    aspect-ratio: 4 / 3;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: radial-gradient(ellipse at 50% 60%, var(--accent-soft), transparent 70%), var(--surface);
+  }
+  .frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .frame.fit-contain :global(img) {
+    object-fit: contain;
+    padding: 20px;
+  }
+  .frame:hover :global(img) {
+    transform: scale(1.02);
+  }
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 12px;
+  }
+  .name {
+    font-size: 19px;
+    font-weight: 500;
+  }
+  @media (max-width: 760px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

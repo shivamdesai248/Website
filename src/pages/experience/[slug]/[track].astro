@@ -1,0 +1,45 @@
+---
+/** A track (sub-page) of an experience, e.g. /experience/soar/embedded. */
+import { render, type CollectionEntry } from 'astro:content';
+import ExperienceDetail from '../../../components/ExperienceDetail.astro';
+import { getCollection } from 'astro:content';
+import { getTracks } from '../../../lib/content';
+import { url } from '../../../lib/url';
+
+export async function getStaticPaths() {
+  const experiences = await getCollection('experience');
+  const tracks = await getTracks();
+  return tracks.map((track) => {
+    const [slug, name] = track.id.split('/');
+    const parent = experiences.find((e) => e.id === slug)!;
+    const siblings = tracks.filter((t) => t.id.startsWith(`${slug}/`));
+    const next = siblings[(siblings.indexOf(track) + 1) % siblings.length];
+    return { params: { slug, track: name }, props: { track, parent, next } };
+  });
+}
+
+interface Props {
+  track: CollectionEntry<'tracks'>;
+  parent: CollectionEntry<'experience'>;
+  next: CollectionEntry<'tracks'>;
+}
+const { track, parent, next } = Astro.props;
+const d = track.data;
+const { Content } = await render(track);
+---
+<ExperienceDetail
+  backHref={url(`/experience/${parent.id}`)}
+  backText={parent.data.title}
+  meta={`${parent.data.org} · ${parent.data.period}`}
+  title={d.title}
+  summary={d.summary}
+  tags={d.tags}
+  stats={d.stats}
+  cover={d.cover}
+  coverAlt={d.coverAlt}
+  coverFit={d.coverFit}
+  gallery={d.gallery}
+  next={next.id !== track.id ? { href: url(`/experience/${next.id}`), title: next.data.title, label: `More from ${parent.data.title}` } : undefined}
+>
+  <Content />
+</ExperienceDetail>

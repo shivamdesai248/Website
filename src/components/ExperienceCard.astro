@@ -1,0 +1,22 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Card from './Card.astro';
+import { url } from '../lib/url';
+
+interface Props {
+  entry: CollectionEntry<'experience'>;
+}
+const { entry } = Astro.props;
+const d = entry.data;
+---
+<Card
+  href={url(`/experience/${entry.id}`)}
+  label={`${d.org} · ${d.period}`}
+  title={d.title}
+  summary={d.summary}
+  tags={d.tags}
+  cover={d.cover}
+  coverAlt={d.coverAlt}
+  coverFit={d.coverFit}
+  word={d.org}
+/>

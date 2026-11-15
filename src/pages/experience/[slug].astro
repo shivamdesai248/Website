@@ -1,0 +1,215 @@
+---
+/**
+ * An experience page. Two layouts:
+ * - Write-up (default): header, stats, cover, Markdown body, gallery.
+ * - Hub: when the experience has tracks (src/content/experience/<slug>/<track>/index.md),
+ *   the page shows the hero photo, the intro (Markdown body) and a card per track.
+ */
+import { render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Card from '../../components/Card.astro';
+import PhotoTitle from '../../components/PhotoTitle.astro';
+import ExperienceDetail from '../../components/ExperienceDetail.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getExperiences, getPosts, getTracks } from '../../lib/content';
+import { url } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const all = await getExperiences();
+  return all.map((entry, i) => ({ params: { slug: entry.id }, props: { entry, next: all[(i + 1) % all.length] } }));
+}
+
+interface Props {
+  entry: CollectionEntry<'experience'>;
+  next: CollectionEntry<'experience'>;
+}
+const { entry, next } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const related = (await getPosts()).filter((p) => p.data.experience === entry.id);
+const tracks = await getTracks(entry.id);
+const nextLink = { href: url(`/experience/${next.id}`), title: next.data.title };
+---
+{
+  tracks.length === 0 ? (
+    <ExperienceDetail
+      backHref={url('/#experience')}
+      backText="All experience"
+      meta={`${d.org} · ${d.period}`}
+      title={d.title}
+      summary={d.summary}
+      role={d.role}
+      tags={d.tags}
+      stats={d.stats}
+      cover={d.coverOnPage ? d.cover : undefined}
+      coverAlt={d.coverAlt}
+      coverFit={d.coverFit}
+      gallery={d.gallery}
+      related={related}
+      next={nextLink}
+      heroPhoto={d.heroPhoto}
+      heroAlt={d.heroAlt}
+      heroPosition={d.heroPosition}
+    >
+      <Content />
+    </ExperienceDetail>
+  ) : (
+    <Base title={d.title} description={d.summary} image={d.heroPhoto?.src}>
+      <article class="hub">
+        <div class="container">
+          <a href={url('/#experience')} class="link-arrow back"><span aria-hidden="true">←</span> All experience</a>
+        </div>
+
+        {d.heroPhoto && (
+          <div class="container">
+            <PhotoTitle image={d.heroPhoto} alt={d.heroAlt ?? ''} position={d.heroPosition} label={`${d.org} · ${d.period}`} title={d.title} />
+          </div>
+        )}
+
+        {d.heroPhoto ? (
+          <header class="container intro-stacked">
+            <div class="intro-text">
+              <Content />
+            </div>
+            <p class="label role">{d.role}</p>
+          </header>
+        ) : (
+          <header class="container intro">
+            <div class="intro-head">
+              <p class="label">{d.org} · {d.period}</p>
+              <h1 class="h-display title">{d.title}</h1>
+              <p class="label role">{d.role}</p>
+            </div>
+            <div class="prose intro-body">
+              <Content />
+            </div>
+          </header>
+        )}
+
+        <section class="container tracks" aria-label={`${d.title} work`}>
+          {tracks.map((t) => (
+            <Card
+              href={url(`/experience/${t.id}`)}
+              label={d.org}
+              title={t.data.title}
+              summary={t.data.summary}
+              tags={t.data.tags}
+              cover={t.data.cover}
+              coverAlt={t.data.coverAlt}
+              coverFit={t.data.coverFit}
+              sizes="(max-width: 760px) 100vw, 50vw"
+            />
+          ))}
+        </section>
+
+        {related.length > 0 && (
+          <section class="container related">
+            <p class="label">Related writing</p>
+            <div class="rgrid">{related.map((p) => <PostCard post={p} />)}</div>
+          </section>
+        )}
+
+        <nav class="container next" aria-label="Next">
+          <a href={nextLink.href}>
+            <span class="label">Next</span>
+            <span class="next-title">{nextLink.title} <span class="arr" aria-hidden="true">↗</span></span>
+          </a>
+        </nav>
+      </article>
+    </Base>
+  )
+}
+
+<style>
+  .hub .back {
+    margin: clamp(32px, 6vw, 72px) 0 28px;
+  }
+  .back span {
+    color: var(--accent-ink);
+  }
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(24px, 5vw, 80px);
+    padding-block: clamp(40px, 6vw, 80px);
+  }
+  .intro .title {
+    margin: 12px 0 14px;
+    font-size: clamp(48px, 8vw, 120px);
+  }
+  .intro .role {
+    margin: 0;
+    color: var(--fg-2);
+  }
+  .intro-body {
+    align-self: end;
+  }
+  /* With a photo title: intro below the photo, styled like the summary on write-up pages. */
+  .intro-stacked {
+    padding-top: 28px;
+    padding-bottom: clamp(40px, 6vw, 72px);
+  }
+  .intro-text {
+    max-width: 680px;
+  }
+  .intro-text :global(p) {
+    margin: 0 0 18px;
+    font-size: clamp(18px, 1.6vw, 21px);
+    line-height: 1.5;
+    color: var(--fg-2);
+  }
+  .intro-stacked .role {
+    margin: 0;
+    color: var(--fg-2);
+  }
+  .intro-body > :global(:first-child) {
+    margin-top: 0;
+  }
+  .tracks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    padding-bottom: clamp(64px, 8vw, 112px);
+  }
+  .related {
+    padding-bottom: clamp(48px, 7vw, 96px);
+  }
+  .rgrid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+  }
+  .next {
+    border-top: 1px solid var(--line);
+  }
+  .next a {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-block: clamp(40px, 6vw, 80px);
+    text-decoration: none;
+  }
+  .next-title {
+    font-size: clamp(30px, 4.6vw, 64px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+  .arr {
+    color: var(--accent-ink);
+  }
+  .next a:hover .next-title {
+    color: var(--accent-ink);
+  }
+  @media (max-width: 900px) {
+    .intro {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 760px) {
+    .tracks {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

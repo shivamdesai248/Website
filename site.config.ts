@@ -1,0 +1,50 @@
+/**
+ * Site-wide settings. Edit this file to switch features on or off.
+ *
+ * Flags can also be overridden at build time with environment variables
+ * (used by `npm run check:flags`): SITE_BLOG, SITE_DESIGN, SITE_THEME_TOGGLE,
+ * SITE_DRAFTS = "true" | "false".
+ */
+
+const env: Record<string, string | undefined> =
+  (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env ?? {};
+
+function flag(name: string, fallback: boolean): boolean {
+  const v = env[name];
+  if (v === 'true') return true;
+  if (v === 'false') return false;
+  return fallback;
+}
+
+export const site = {
+  name: 'Shivam Desai',
+  role: 'Embedded Software Engineer',
+  description:
+    'Shivam Desai — embedded software engineer working across firmware, electronics and mechanical design. Garmin, SOAR hybrid rockets, and a Hall effect thruster.',
+  email: 'shivamdesai2404@gmail.com',
+  linkedin: 'https://www.linkedin.com/in/shivam-desai-0458a5231/',
+  github: 'https://github.com/shivamdesai248',
+
+  /**
+   * Public URL of the site, and the sub-path it is served from.
+   * The site lives at the root ("/"). On GitHub the deploy workflow passes the
+   * real Pages address in SITE_URL / SITE_BASE, so the build always matches
+   * wherever GitHub serves it (e.g. "/Website" until the repo is renamed to
+   * shivamdesai248.github.io, or "/" with a custom domain).
+   */
+  url: env.SITE_URL || 'https://shivamdesai248.github.io',
+  base: env.SITE_BASE || '/',
+
+  features: {
+    /** Blog pages, nav link and "Latest writing" section. */
+    blog: flag('SITE_BLOG', true),
+    /** Design gallery page, nav link and home teaser. */
+    design: flag('SITE_DESIGN', true),
+    /** Light/dark toggle. When false the site is dark mode only. */
+    themeToggle: flag('SITE_THEME_TOGGLE', true),
+    /** Include posts/items marked `draft: true` (for previewing only — keep false). */
+    showDrafts: flag('SITE_DRAFTS', false),
+  },
+} as const;
+
+export type Site = typeof site;

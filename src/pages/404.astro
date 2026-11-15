@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Pill from '../components/Pill.astro';
+import { url } from '../lib/url';
+---
+<Base title="Page not found">
+  <section class="container nf">
+    <p class="label">Error 404</p>
+    <h1 class="wordmark">Off course</h1>
+    <p class="muted">That page doesn’t exist, or has moved.</p>
+    <Pill href={url('/')}>Back home</Pill>
+  </section>
+</Base>
+<style>
+  .nf {
+    min-height: 60vh;
+    padding-block: 96px;
+  }
+  h1 {
+    font-size: clamp(56px, 10vw, 140px);
+    margin: 14px 0 20px;
+  }
+  .muted {
+    margin: 0 0 30px;
+    font-size: 18px;
+  }
+</style>

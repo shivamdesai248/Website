@@ -1,0 +1,13 @@
+---
+/**
+ * The /design page. When features.design is false, getStaticPaths returns
+ * nothing, so the page doesn't exist.
+ */
+import { site } from '../../../site.config';
+import DesignGallery from '../../components/pages/DesignGallery.astro';
+
+export function getStaticPaths() {
+  return site.features.design ? [{ params: { index: undefined } }] : [];
+}
+---
+<DesignGallery />
