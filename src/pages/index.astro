@@ -74,9 +74,12 @@ const principles = [
   {
     site.features.blog && posts.length > 0 && (
       <section id="blog" class="section container">
-        <SectionHeader title="Blog" intro={blogIntro} linkHref={url('/blog')} linkText="All posts" />
+        <SectionHeader title="Blog" intro={blogIntro} />
         <div class="pgrid">
           {posts.map((p) => <PostCard post={p} />)}
+        </div>
+        <div class="more">
+          <Pill href={url('/blog')} variant="secondary">All posts</Pill>
         </div>
       </section>
     )
@@ -170,6 +173,9 @@ const principles = [
   .contact-sub {
     margin: 0 0 30px;
     font-size: 18px;
+  }
+  .more {
+    margin-top: 20px;
   }
   .ctas {
     display: flex;
