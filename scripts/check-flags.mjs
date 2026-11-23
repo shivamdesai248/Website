@@ -26,7 +26,7 @@ for (const v of variants) {
   if (existsSync(`${v.out}/cpp/arm-gcc/index.html`) !== on) fail(`${v.name}: C++ topic presence wrong`);
   if (home.includes('theme-toggle') !== on) fail(`${v.name}: theme toggle presence wrong`);
   if (home.includes("localStorage.getItem('theme')") !== on) fail(`${v.name}: theme script presence wrong`);
-  if (!home.includes('data-theme="dark"')) fail(`${v.name}: dark default missing`);
+  if (!home.includes('data-theme="light"')) fail(`${v.name}: light default missing`);
   console.log(`✓ ${v.name} OK`);
 }
 console.log('\n✓ Flag checks passed');

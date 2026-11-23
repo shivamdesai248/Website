@@ -1,20 +1,17 @@
 ---
-/** "01 / Label" + heading, optional intro paragraph below, optional link on the right. */
+/** Section heading (a plain title like "Experience"), optional intro paragraph below, optional link on the right. */
 interface Props {
-  num: string;
-  label: string;
   title: string;
   linkHref?: string;
   linkText?: string;
   /** Short paragraph(s) under the title telling visitors what the section is about. */
   intro?: string | string[];
 }
-const { num, label, title, linkHref, linkText, intro } = Astro.props;
+const { title, linkHref, linkText, intro } = Astro.props;
 const paras = intro === undefined ? [] : Array.isArray(intro) ? intro : [intro];
 ---
 <header class="sh">
   <div>
-    <p class="label sh-label"><span class="sh-num">{num}</span> / {label}</p>
     <h2 class="h-display sh-title">{title}</h2>
     {paras.map((p) => <p class="sh-intro">{p}</p>)}
   </div>
@@ -28,12 +25,6 @@ const paras = intro === undefined ? [] : Array.isArray(intro) ? intro : [intro];
     gap: 24px;
     margin-bottom: clamp(28px, 4vw, 48px);
     flex-wrap: wrap;
-  }
-  .sh-label {
-    margin: 0 0 10px;
-  }
-  .sh-num {
-    color: var(--accent-ink);
   }
   .sh-title {
     margin: 0;

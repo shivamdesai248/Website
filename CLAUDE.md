@@ -17,9 +17,9 @@ Read this first in every session. Then read `docs/PROGRESS.md` to see where work
 (Short version — the full design system is `docs/DESIGN.md`.)
 1. **Colours only from the CSS variables** in `src/styles/global.css` (`--bg`, `--surface`, `--line`, `--fg`, `--muted`, `--accent`, `--accent-ink`, …). Never add new hex colours in components.
 2. **One accent colour:** lime `#B8F23C`. Filled buttons use `--accent` with dark text; accent used as text or icons uses `--accent-ink`.
-3. **Dark mode is the default.** Light mode exists only when `features.themeToggle` is true.
+3. **Light mode is the default.** Dark mode exists only when `features.themeToggle` is true.
 4. **Fonts:** wordmark/name = Archivo Expanded Black (`font-display` / `.wordmark`); everything else = Inter Tight. Labels are small uppercase with `0.12em` tracking (`.label`). Self-hosted via `@fontsource-variable/*`; no Google Fonts.
-5. **Section names say "Experience", never "Projects"** (headings, nav links, section labels). The word is fine in body text. `npm run check` fails if a heading, nav link or label says "Projects".
+5. **Section names say "Experience", never "Projects"** (headings, nav links, section labels). The word is fine in body text. `npm run check` fails if a heading, nav link or label says "Projects". Headings are plain titles ("Experience", "Design", "Blog", "Contact"): no `01 /` numbering, no label repeating the name, no catchphrase as the heading (see `docs/DESIGN.md` §8).
 6. **No "open to opportunities" pill**, no location clock.
 7. **Feature flags live in `site.config.ts`** (`blog`, `design`, `cpp`, `themeToggle`). When a flag is off, its nav link, home section and routes must be absent from the built site, not hidden with CSS. Blog, design and C++ routes are `src/pages/blog/[...slug].astro`, `src/pages/design/[...index].astro` and `src/pages/cpp/[...slug].astro`; their `getStaticPaths` return nothing when the flag is off (this also updates live in the dev server).
 8. **Section numbers (`01 /`) are computed**, never hard-coded, so hiding a section leaves no gap.
@@ -33,6 +33,7 @@ Read this first in every session. Then read `docs/PROGRESS.md` to see where work
 - `src/layouts/Base.astro` — page shell, theme script, top bar, footer
 - `src/components/` — UI pieces (`TopBar`, `ThemeToggle.tsx`, `MobileMenu.tsx`, `Pill`, `SectionHeader`, …)
 - `src/data/resume.ts` — single source for the resume page and the home page skills
+- `src/data/inspiration.ts` — the "Inspiration" list at the bottom of the Design page (name, link, optional one-line note)
 - `src/data/intros.ts` — Blog and Design intro paragraphs, shown on those pages and under their home-page sections
 - `src/content/experience/<slug>/index.md` — AstroPulse, SOAR, Garmin pages
 - `src/content/experience/<slug>/<track>/index.md` — optional sub-pages ("tracks"), e.g. SOAR → embedded, mechanical. An experience with tracks renders as a hub (hero photo, intro, track cards). HTML comments (`<!-- note -->`) in Markdown are stripped from the published page, so use them for authoring notes.

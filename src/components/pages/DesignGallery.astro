@@ -4,13 +4,18 @@ import Base from '../../layouts/Base.astro';
 import { getDesignItems } from '../../lib/content';
 import { url } from '../../lib/url';
 import { designIntro, designAbout } from '../../data/intros';
+import { inspiration } from '../../data/inspiration';
 
 const items = await getDesignItems();
+/** "LinkedIn" for LinkedIn profiles, otherwise the site's domain (e.g. "cadenkraft.com"). */
+const linkLabel = (href: string) => {
+  const host = new URL(href).hostname.replace(/^www\./, '');
+  return host === 'linkedin.com' ? 'LinkedIn' : host;
+};
 ---
 <Base title="Design" description="Renders, posters and presentations by Shivam Desai.">
   <section class="container head">
-    <p class="label">Design</p>
-    <h1 class="h-display title">Renders, posters and decks</h1>
+    <h1 class="h-display title">Design</h1>
     <p class="intro">{designIntro}</p>
     <div class="prose about-design">
       {designAbout.map((para) => <p>{para}</p>)}
@@ -21,18 +26,52 @@ const items = await getDesignItems();
     {
       items.map((d) => (
         <figure class="item">
-          <a class:list={['frame', `fit-${d.data.fit}`]} href={d.data.href ?? d.data.image.src} target="_blank" rel="noopener">
-            <Image src={d.data.image} alt={d.data.alt} widths={[640, 1200, 1800]} sizes="(max-width: 760px) 100vw, 50vw" />
+          {/* Frame opens: the file in `href` (e.g. a PDF), else the write-up for a clip, else the full-size image. */}
+          <a
+            class:list={['frame', `fit-${d.data.fit}`]}
+            href={d.data.href ? url(d.data.href) : d.data.video && d.data.post ? url(`/blog/${d.data.post}`) : d.data.image.src}
+            {...(d.data.video && d.data.post && !d.data.href ? {} : { target: '_blank', rel: 'noopener' })}
+          >
+            {d.data.video ? (
+              <video src={url(d.data.video)} poster={d.data.image.src} data-loop autoplay muted loop playsinline preload="metadata" aria-label={d.data.alt} />
+            ) : (
+              <Image src={d.data.image} alt={d.data.alt} widths={[640, 1200, 1800]} sizes="(max-width: 760px) 100vw, 50vw" />
+            )}
           </a>
           <figcaption>
             <span class="label">{d.data.kind}{d.data.tools.length > 0 && ` · ${d.data.tools.join(', ')}`}</span>
             <span class="name">{d.data.title}</span>
-            {d.data.experience && <a class="link-arrow" href={url(`/experience/${d.data.experience}`)}>Related experience<span aria-hidden="true">↗</span></a>}
+            <span class="links">
+              {d.data.post && <a class="link-arrow" href={url(`/blog/${d.data.post}`)}>Read the write-up<span aria-hidden="true">↗</span></a>}
+              {d.data.experience && <a class="link-arrow" href={url(`/experience/${d.data.experience}`)}>Related experience<span aria-hidden="true">↗</span></a>}
+            </span>
           </figcaption>
         </figure>
       ))
     }
   </section>
+
+  {
+    inspiration.length > 0 && (
+      <section class="container insp-wrap" aria-labelledby="inspiration">
+        <h2 id="inspiration" class="h-display insp-title">Inspiration</h2>
+        <p class="insp-intro">People whose work, and the way they present it, I look up to.</p>
+        <ul class="insp">
+          {inspiration.map((p) => (
+            <li>
+              <a href={p.href} target="_blank" rel="noopener noreferrer">
+                <span class="label">{linkLabel(p.href)}</span>
+                <span class="i-name">
+                  {p.name} <span class="arr" aria-hidden="true">↗</span>
+                </span>
+                {p.note && <span class="i-note">{p.note}</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
 </Base>
 <style>
   .head {
@@ -40,7 +79,7 @@ const items = await getDesignItems();
     padding-bottom: 40px;
   }
   .title {
-    margin: 12px 0 16px;
+    margin: 0 0 16px;
     font-size: clamp(40px, 6.4vw, 92px);
   }
   .about-design {
@@ -69,7 +108,8 @@ const items = await getDesignItems();
     border: 1px solid var(--line);
     background: radial-gradient(ellipse at 50% 60%, var(--accent-soft), transparent 70%), var(--surface);
   }
-  .frame :global(img) {
+  .frame :global(img),
+  .frame video {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -79,7 +119,8 @@ const items = await getDesignItems();
     object-fit: contain;
     padding: 20px;
   }
-  .frame:hover :global(img) {
+  .frame:hover :global(img),
+  .frame:hover video {
     transform: scale(1.02);
   }
   figcaption {
@@ -91,6 +132,66 @@ const items = await getDesignItems();
   .name {
     font-size: 19px;
     font-weight: 500;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+  }
+  /* Inspiration: link rows in the Documents style. */
+  .insp-wrap {
+    padding-bottom: clamp(64px, 8vw, 112px);
+  }
+  .insp-title {
+    margin: 0 0 12px;
+    font-size: clamp(32px, 4.4vw, 56px);
+  }
+  .insp-intro {
+    margin: 0 0 clamp(20px, 3vw, 32px);
+    max-width: 680px;
+    font-size: clamp(17px, 1.4vw, 19px);
+    color: var(--fg-2);
+  }
+  .insp {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .insp li {
+    border-top: 1px solid var(--line);
+  }
+  .insp a {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-block: clamp(22px, 3vw, 32px);
+    text-decoration: none;
+    color: var(--fg);
+  }
+  .i-name {
+    font-size: clamp(24px, 3.4vw, 44px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    transition: color 0.2s ease;
+  }
+  .arr {
+    color: var(--accent-ink);
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .i-note {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 62ch;
+  }
+  .insp a:hover .i-name,
+  .insp a:focus-visible .i-name {
+    color: var(--accent-ink);
+  }
+  .insp a:hover .arr {
+    transform: translate(2px, -2px);
   }
   @media (max-width: 760px) {
     .grid {

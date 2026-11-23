@@ -1,21 +1,17 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import { blogIntro, designIntro, designAbout } from '../data/intros';
+import { blogIntro } from '../data/intros';
 import ExperienceCard from '../components/ExperienceCard.astro';
 import PostCard from '../components/PostCard.astro';
 import Pill from '../components/Pill.astro';
 import { site } from '../../site.config';
 import { url } from '../lib/url';
-import { getExperiences, getPosts, getDesignItems, sectionCounter } from '../lib/content';
-import { skills } from '../data/resume';
+import { getExperiences, getPosts } from '../lib/content';
 
 const experiences = await getExperiences();
 const posts = (await getPosts()).slice(0, 3);
-const designItems = (await getDesignItems()).slice(0, 3);
-const n = sectionCounter();
 
 /** DRAFT copy — Shivam to review and rewrite in his own words. */
 const principles = [
@@ -41,29 +37,14 @@ const principles = [
   <Hero />
 
   <section id="experience" class="section container">
-    <SectionHeader num={n()} label="Experience" title="Where I’ve done my best work" />
+    <SectionHeader title="Experience" />
     <div class="xgrid">
       {experiences.map((e) => <ExperienceCard entry={e} />)}
     </div>
   </section>
 
-  {
-    site.features.design && designItems.length > 0 && (
-      <section id="design" class="section container">
-        <SectionHeader num={n()} label="Design" title="Renders, posters and decks" intro={[designIntro, ...designAbout]} linkHref={url('/design')} linkText="All design work" />
-        <div class="dgrid">
-          {designItems.map((d) => (
-            <a href={url('/design')} class:list={['dthumb', `fit-${d.data.fit}`]}>
-              <Image src={d.data.image} alt={d.data.alt} widths={[480, 800]} sizes="(max-width: 760px) 100vw, 33vw" />
-            </a>
-          ))}
-        </div>
-      </section>
-    )
-  }
-
   <section id="about" class="section container">
-    <SectionHeader num={n()} label="About" title="How I work" />
+    <SectionHeader title="About" />
     <div class="about">
       <div class="about-intro">
         <p>
@@ -89,25 +70,11 @@ const principles = [
     </div>
   </section>
 
-  <section id="skills" class="section container">
-    <SectionHeader num={n()} label="Skills" title="Tools of the trade" linkHref={url('/resume')} linkText="Full resume" />
-    <dl class="skills">
-      {
-        skills.map((g) => (
-          <div class="skill-row">
-            <dt>{g.name}</dt>
-            <dd>{g.items.map((s) => <span class="tag">{s}</span>)}</dd>
-          </div>
-        ))
-      }
-    </dl>
-  </section>
-
 
   {
     site.features.blog && posts.length > 0 && (
       <section id="blog" class="section container">
-        <SectionHeader num={n()} label="Blog" title="Latest posts" intro={blogIntro} linkHref={url('/blog')} linkText="All posts" />
+        <SectionHeader title="Blog" intro={blogIntro} linkHref={url('/blog')} linkText="All posts" />
         <div class="pgrid">
           {posts.map((p) => <PostCard post={p} />)}
         </div>
@@ -116,12 +83,11 @@ const principles = [
   }
 
   <section id="contact" class="section container contact">
-    <p class="label"><span class="accent">{n()}</span> / Contact</p>
-    <h2 class="h-display contact-title">Let’s build something.</h2>
-    <p class="muted contact-sub">The best way to reach me is email. I’m also on LinkedIn.</p>
+    <SectionHeader title="Contact" />
+    <p class="muted contact-sub">The best way to reach me is on LinkedIn. I don’t check my personal email very often.</p>
     <div class="ctas">
-      <Pill href={`mailto:${site.email}`}>{site.email}</Pill>
-      <Pill href={site.linkedin} variant="secondary" external>LinkedIn</Pill>
+      <Pill href={site.linkedin} external>Message me on LinkedIn</Pill>
+      <Pill href={`mailto:${site.email}`} variant="secondary">{site.email}</Pill>
     </div>
   </section>
 </Base>
@@ -132,27 +98,10 @@ const principles = [
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
   }
-  .dgrid,
   .pgrid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
-  }
-  .dthumb {
-    aspect-ratio: 4 / 3;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    background: var(--surface-2);
-  }
-  .dthumb :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .dthumb.fit-contain :global(img) {
-    object-fit: contain;
-    padding: 16px;
   }
   @media (max-width: 1100px) {
     .xgrid {
@@ -161,7 +110,6 @@ const principles = [
   }
   @media (max-width: 760px) {
     .xgrid,
-    .dgrid,
     .pgrid {
       grid-template-columns: minmax(0, 1fr);
     }
@@ -216,45 +164,8 @@ const principles = [
     }
   }
 
-  .skills {
-    margin: 0;
-  }
-  .skill-row {
-    display: grid;
-    grid-template-columns: minmax(180px, 280px) minmax(0, 1fr);
-    gap: 16px;
-    padding: 20px 0;
-    border-top: 1px solid var(--line);
-  }
-  .skill-row:last-child {
-    border-bottom: 1px solid var(--line);
-  }
-  .skill-row dt {
-    font-weight: 500;
-    font-size: 17px;
-  }
-  .skill-row dd {
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  @media (max-width: 700px) {
-    .skill-row {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 12px;
-    }
-  }
-
   .contact {
     border-top: 1px solid var(--line);
-  }
-  .accent {
-    color: var(--accent-ink);
-  }
-  .contact-title {
-    margin: 12px 0 14px;
-    font-size: clamp(44px, 7vw, 104px);
   }
   .contact-sub {
     margin: 0 0 30px;

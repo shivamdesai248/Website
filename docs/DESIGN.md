@@ -11,7 +11,7 @@ Inspiration: Lime Duo (limeduo.com), SpaceX, Anduril — near-black, minimal, bi
 
 All colours are CSS variables defined **only** in `src/styles/global.css`. Components never contain hex, rgb or named colours (`npm run check` fails if they do; the one exception is the `theme-color` meta tag).
 
-| Token | Dark (default) | Light | Use for |
+| Token | Dark | Light (default) | Use for |
 |---|---|---|---|
 | `--bg` / `--bg-rgb` | `#0a0a0a` | `#f4f4f1` | Page background; `--bg-rgb` for fades `rgba(var(--bg-rgb), x)` |
 | `--surface` | `#121212` | `#ffffff` | Cards, panels, figures |
@@ -23,7 +23,7 @@ All colours are CSS variables defined **only** in `src/styles/global.css`. Compo
 | `--muted` | `#9a9a9a` | `#5c5c5c` | Secondary text, labels, captions |
 | `--accent` | `#b8f23c` | `#b8f23c` | **Fills only**: primary buttons, arrow badges |
 | `--on-accent` | `#0a0a0a` | `#0a0a0a` | Text/icons on an `--accent` fill |
-| `--accent-ink` | `#b8f23c` | `#4f7a00` | Accent as **text or icon**: section numbers, arrows, link underlines, stat values, list bullets and numbered-list numbers |
+| `--accent-ink` | `#b8f23c` | `#4f7a00` | Accent as **text or icon**: arrows, link underlines, stat values, list bullets and numbered-list numbers |
 | `--accent-soft` | lime 12% | dark green 10% | Faint glow behind renders |
 | `--caption` | `#5e6b80` | `#8a8a86` | Vertical photo caption in the hero |
 | `--warn` / `--danger` | amber / red | darker | Callout borders only |
@@ -36,7 +36,7 @@ Rules:
 
 ## 2. Light and dark mode
 
-- **Dark is the default.** Light mode only exists when `features.themeToggle` is true.
+- **Light is the default.** Dark mode exists only when `features.themeToggle` is true.
 - Every component must work in both themes — check both before calling work done.
 - Images that only suit one theme use `class="theme-dark-only"` / `class="theme-light-only"` (e.g. hero night/day photos).
 - Fades and overlays use `--bg` / `--bg-rgb`, never black/white, so they work in both themes.
@@ -94,7 +94,7 @@ Reuse these before writing new UI.
 | Component | File | Notes |
 |---|---|---|
 | Pill button | `src/components/Pill.astro` | `variant="primary"` (lime fill) or `"secondary"` (outlined); always has the round arrow badge. Radius 999px. |
-| Section header | `src/components/SectionHeader.astro` | `01 / Label` + title + optional intro paragraph (`intro`, `--fg-2`, max 680px) + optional "All … ↗" link. Numbers come from `sectionCounter()` — never hard-code them. The label matches the page the section links to (Design, Blog). Home sections that preview a page (Design, Blog) show that page's intro, taken from `src/data/intros.ts` so the text is written once. |
+| Section header | `src/components/SectionHeader.astro` | Plain title only (`title`: Experience, Design, About, Blog, Contact) + optional intro paragraph (`intro`, `--fg-2`, max 680px) + optional "All … ↗" link. No section numbers, no label above it, no tagline as the heading. The title matches the page the section links to (Design, Blog). The home Blog section shows the Blog page's intro, taken from `src/data/intros.ts` so the text is written once. Home page order: Experience, About, Blog, Contact (Design and C++ live only in the top bar). |
 | Experience card | `src/components/ExperienceCard.astro` | Image well (4:3) + label + title + summary + up to 3 tags + lime arrow badge |
 | Card (generic) | `src/components/Card.astro` | Same look as the experience card; used for experience tracks. `ExperienceCard` wraps it. |
 | Experience write-up | `src/components/ExperienceDetail.astro` | Back link, header, stats strip, cover, tags + prose, gallery, related posts, next link. Used by experience pages and their tracks. |
@@ -102,7 +102,10 @@ Reuse these before writing new UI.
 | Photo title | `src/components/PhotoTitle.astro` | Wide photo (16:7, 20px radius) with the page's label + `<h1>` laid over the bottom-left on a dark multi-stop fade. Desktop only (> 760px); on phones the text sits below the photo in normal colours. Text over the photo uses `--on-photo` / `--on-photo-muted` and the fade uses `--overlay-rgb`, which stay dark in both themes. See "When to use the photo title" below. |
 | Gallery | `src/components/Gallery.astro` | Section title (`.h-display`, `clamp(28px, 3vw, 40px)`) + masonry of photos (CSS columns, ~260px min, 16px gaps). Photos keep their own shape and fill their tile edge to edge: no glow, no padding, 14px radius, 1px `--line` border. Click opens a lightbox over a blurred page (`--overlay-rgb` at .55 + 18px blur) with prev/next, Esc and click-outside to close. |
 | Documents | `src/components/Documents.astro` | Optional section after the Gallery on experience, sub-page and blog pages, set by a `documents:` list in frontmatter (`title`, `file`, optional `description`). Same title style as Gallery. Each document is a full-width link row between 1px `--line` rules: small uppercase label with the type and size (worked out at build time, e.g. `PDF · 6.1 MB`), then a large title (`clamp(24px, 3.4vw, 44px)`, weight 500) with a lime `↗`, like the "Next" link. Hover turns the title `--accent-ink` and nudges the arrow. PDFs open in a new tab; other types (e.g. `.pptx`) download. Files live in `public/documents/<page>/`; compress big PDFs first (aim for under ~15 MB). |
+| Resume PDF button | `src/pages/resume.astro` | 64px circle (52px on phones) beside the name, `--line-strong` border, document-with-down-arrow icon over a small `PDF` label. Hover fills lime with `--on-accent` icon. Downloads `public/resume/shivam-desai-resume.pdf` as `Shivam-Desai-Resume.pdf`; replace that file to update it. |
 | Embedded C++ pages | `CppIndex.astro`, `CppTopic.astro`, `ArticleBody.astro` | Hub at `/cpp`: label, display title, intro in the experience-summary style, "Jump to topics ↓", then the overview with the sticky "On this page" list (`ArticleBody`, same as blog posts), then a **Topics** list. Topic rows use the Documents row style with a lime two-digit number (`01`, `02`…) in a left column, a large title with lime `↗` and a muted one-line description. Topic pages use the blog-post header (back link to the hub, `Topic 02 of 06 · N min read` label, title, description, tags), the same reading layout, and a Previous/Next pager that falls back to the hub at either end. |
+| Design item | `src/content/design/*.md` → `DesignGallery.astro` | 4:3 tile (`fit: contain` for transparent renders) + `Kind · Tools` label + title + links. Optional `video` (a short MP4 in `public/videos/`) plays as a muted loop in the tile, with `image` as its still frame (also used on the home page). Optional `post` (blog folder name) adds "Read the write-up ↗"; `href` makes the tile open a file such as a PDF. Newest `date` first. Design isn't on the home page (like C++); it's reached from the top bar. Make images 4:3 (e.g. 1600×1200) so nothing important is cropped. |
+| Inspiration list | `DesignGallery.astro` + `src/data/inspiration.ts` | Bottom of the Design page: section title "Inspiration" + one-line intro, then link rows in the Documents style (small label with the site's domain or "LinkedIn", large name with lime `↗`, optional muted one-line note). Opens in a new tab. |
 | Post card | `src/components/PostCard.astro` | Cover (16:10) + date/reading time label + title + description |
 | Tag | `.tag` | 1px `--line` border, pill radius, 13px, `--fg-2` |
 | Arrow link | `.link-arrow` | Text + `↗` in `--accent-ink` |
@@ -130,6 +133,8 @@ To turn it on for an experience page, set `heroPhoto`, `heroAlt` and optionally 
 - **Photos** (hero, launch shots): full-bleed or in rounded frames; edges fade into `--bg` with multi-stop gradient overlays, never a hard line. No CSS masks for fades.
 - **CAD renders with transparent backgrounds**: shown with `object-fit: contain` on a `--surface` panel with the faint `--accent-soft` radial glow (`coverFit: contain` / `fit: contain`).
 - **Charts and screenshots with white backgrounds**: keep them on white (flatten transparency onto white) so axis text stays readable in dark mode.
+- In articles, 2–3 images on one Markdown line render as a row of equal 3:4 tiles (`figure.media.row`, 12px gap, one shared caption). Use it for portrait phone photos, which are too tall on their own at full column width.
+- Strip location data from phone photos (re-save without EXIF) and crop out anything personal that isn't the subject.
 - All images go through `astro:assets` (`<Image>` or Markdown images) for resizing; give every image real `alt` text.
 - Don't use third-party/copyrighted figures (textbook charts, other people's photos) without permission and a credit.
 
@@ -140,12 +145,13 @@ Thin (6px) square-edged lime scrollbar (no rounded corners) on a transparent tra
 ## 7. Motion
 
 - Subtle only: 0.2–0.25s ease transitions on colour/border; cards lift `translateY(-3px)`; images scale to `1.02–1.03` on hover; arrow icons nudge 1–2px.
-- No scroll-jacking, parallax or auto-playing animation.
+- No scroll-jacking, parallax or auto-playing animation. One exception: GIF-style clips in articles (Markdown video with `#loop`) are short, muted and looping; they pause and show controls under `prefers-reduced-motion` (script in `Base.astro`).
 - Everything respects `prefers-reduced-motion` (handled globally in `global.css`).
 
 ## 8. Writing style in the UI
 
 - Section names (headings, nav links, labels) say **"Experience"**, never "Projects" (enforced by `npm run check`). The word is fine in body text.
+- **Headings are plain titles.** Home sections and section pages are headed by their name only ("Experience", "Design", "Blog", "Contact"). No numbering (`01 / …`), no small label repeating the name above the title, and no catchphrase or tagline in place of the name (not "Where I've done my best work", "Notes from the bench", "Let's build something."). Explain the section in the intro paragraph instead. Small labels are only for real information: dates, roles, reading time, file type and size.
 - Short, plain labels; sentence case; no exclamation marks.
 - No "open to opportunities" pill, no location clock.
 - Contact is email and LinkedIn only.

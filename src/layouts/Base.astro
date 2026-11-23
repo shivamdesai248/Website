@@ -17,7 +17,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = image ? new URL(image, Astro.site).href : undefined;
 ---
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -31,12 +31,12 @@ const ogImage = image ? new URL(image, Astro.site).href : undefined;
     <meta property="og:url" content={canonical} />
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#f4f4f1" />
     {
       site.features.themeToggle && (
         <script is:inline>
           (function () {
-            var t = 'dark';
+            var t = 'light';
             try {
               var s = localStorage.getItem('theme');
               if (s === 'light' || s === 'dark') t = s;
@@ -54,5 +54,15 @@ const ogImage = image ? new URL(image, Astro.site).href : undefined;
       <slot />
     </main>
     <Footer />
+    {/* GIF-style clips (Markdown video ending in #loop) pause and get controls when the visitor prefers reduced motion. */}
+    <script is:inline>
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('video[data-loop]').forEach(function (v) {
+          v.removeAttribute('autoplay');
+          v.pause();
+          v.controls = true;
+        });
+      }
+    </script>
   </body>
 </html>

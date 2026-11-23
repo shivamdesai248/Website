@@ -20,8 +20,8 @@ const [first, last] = site.name.toUpperCase().split(' ');
   <div class="container content">
     <p class="label role">{site.role}</p>
     <h1 id="hero-name" class="wordmark name">{first}<br />{last}</h1>
-    <p class="h-display headline">Code that flies,<br />hardware that works.</p>
-    <p class="intro">Firmware at Garmin, hybrid rocket avionics at SOAR, and a Hall effect thruster built from scratch.</p>
+    <!-- <p class="h-display headline">Code that flies,<br />hardware that works.</p>
+    <p class="intro">Firmware at Garmin, hybrid rocket avionics at SOAR, and a Hall effect thruster built from scratch.</p> -->
     <div class="ctas">
       {/* Primary button: the blog when it's on, otherwise fall back to Experience. */}
       {site.features.blog ? <Pill href={url('/blog')}>Read the blog</Pill> : <Pill href={url('/#experience')}>See experience</Pill>}

@@ -100,7 +100,7 @@ const design = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      kind: z.enum(['Render', 'Poster', 'Presentation', 'Diagram']),
+      kind: z.enum(['Render', 'Poster', 'Presentation', 'Diagram', 'Livery']),
       tools: z.array(z.string()).default([]),
       image: image(),
       alt: z.string(),
@@ -110,6 +110,10 @@ const design = defineCollection({
       experience: z.enum(experienceSlugs).optional(),
       /** Optional link, e.g. to a PDF of a deck in public/. */
       href: z.string().optional(),
+      /** Optional looping clip in public/ (e.g. "/videos/aegis/clip.mp4"); `image` is its still frame. */
+      video: z.string().optional(),
+      /** Optional blog post id (folder name) with the story behind it; adds a "Read the write-up" link. */
+      post: z.string().optional(),
       draft: z.boolean().default(false),
     }),
 });

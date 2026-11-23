@@ -18,12 +18,12 @@ function flag(name: string, fallback: boolean): boolean {
 
 export const site = {
   name: 'Shivam Desai',
-  role: 'Embedded Software Engineer',
+  role: 'Engineer',
   description:
     'Shivam Desai — embedded software engineer working across firmware, electronics and mechanical design. Garmin, SOAR hybrid rockets, and a Hall effect thruster.',
   email: 'shivamdesai2404@gmail.com',
   linkedin: 'https://www.linkedin.com/in/shivam-desai-0458a5231/',
-  github: 'https://github.com/shivamdesai248',
+  github: 'https://github.com/shivamdesai04',
 
   /**
    * Public URL of the site, and the sub-path it is served from.
@@ -41,8 +41,8 @@ export const site = {
     /** Design gallery page, nav link and home teaser. */
     design: flag('SITE_DESIGN', true),
     /** Embedded C++ notes: /cpp hub, topic pages and nav link. */
-    cpp: flag('SITE_CPP', false),
-    /** Light/dark toggle. When false the site is dark mode only. */
+    cpp: flag('SITE_CPP', true),
+    /** Light/dark toggle. When false the site is the default mode only. */
     themeToggle: flag('SITE_THEME_TOGGLE', true),
     /** Include posts/items marked `draft: true` (for previewing only — keep false). */
     showDrafts: flag('SITE_DRAFTS', false),
@@ -50,3 +50,4 @@ export const site = {
 } as const;
 
 export type Site = typeof site;
+  

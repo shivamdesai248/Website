@@ -31,10 +31,13 @@ Checked on every build. A missing or wrong field stops the build with an error i
 
 - Standard Markdown: headings, bold/italic, links, lists, quotes, tables
 - Image with caption: `![alt text](./image.png "Caption")`
+- Image size: end the caption with `{width=50%}` (or a pixel width like `{width=480px}`) to shrink an image or video and centre it: `![alt](./tall.png "Caption {width=50%}")`. Use it for tall or low-resolution images. Phones always show full width
+- Images side by side: put 2 or 3 images on **one line** (separated by a space). They become one row of equal tiles (portrait 3:4 crop) with their captions joined by " · "
 - Code: fenced blocks with a language, optional `title="file.cpp"`; copy button added automatically
 - Callouts: `> [!NOTE]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!WARNING]`, `> [!CAUTION]`
 - Maths: `$inline$` and `$$ block $$` (KaTeX)
 - Video: put the file in `public/videos/`, then `![alt](/videos/clip.mp4 "Caption")`
+- GIF-style clip (muted, looping, autoplays, no controls): add `#loop` → `![alt](/videos/clip.mp4#loop "Caption")`. Use a short MP4 instead of a real GIF (about a tenth of the size). Encode with e.g. `ffmpeg -i in.mov -an -vf scale=1280:-2 -c:v libx264 -preset veryfast -crf 27 -pix_fmt yuv420p -movflags +faststart out.mp4`. Visitors who prefer reduced motion get it paused with controls
 - Added automatically: reading time, table of contents (wide screens), previous/next links
 
 ## Publishing

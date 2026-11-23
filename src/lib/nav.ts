@@ -12,8 +12,9 @@ export function navLinks(): NavLink[] {
     { label: 'Experience', href: url('/#experience') },
     { label: 'About', href: url('/#about') },
   ];
-  if (site.features.design) links.push({ label: 'Design', href: url('/design') });
+  // Same order as the home page (Experience, About, Blog), then pages that aren't on it.
   if (site.features.blog) links.push({ label: 'Blog', href: url('/blog') });
+  if (site.features.design) links.push({ label: 'Design', href: url('/design') });
   if (site.features.cpp) links.push({ label: 'C++', href: url('/cpp') });
   return links;
 }

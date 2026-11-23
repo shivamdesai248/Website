@@ -4,8 +4,8 @@ org: Garmin
 role: Embedded Software Engineer 1 · previously Software Engineering Intern
 period: May 2024 – Present
 summary: Firmware for wearables and sensors, from heart-rate monitor drivers and test frameworks as an intern to board bring-up on the Sensor Core platform team.
-order: 3
-tags: [C++, Embedded drivers, Board bring-up, SPI / I²C / UART, GoogleTest, AI workflows]
+order: 2
+tags: [C++, Embedded protocols, Low level hardware bring-up, SPI / I²C / UART, GoogleTest, AI workflows]
 cover: ./garmin-devices.jpg
 coverOnPage: false  # source photos are small; card only
 coverAlt: A Garmin HRM 600 heart-rate strap and the optical sensor on the back of a fēnix 7 Pro watch

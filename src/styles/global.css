@@ -426,6 +426,34 @@ a {
   border: 1px solid var(--line);
   background: var(--surface);
 }
+/* "Caption {width=50%}" in Markdown: a narrower, centred figure. Full width on phones. */
+.prose figure.media[style*='--fig-w'] {
+  max-width: var(--fig-w);
+  margin-inline: auto;
+}
+@media (max-width: 760px) {
+  .prose figure.media[style*='--fig-w'] {
+    max-width: 100%;
+  }
+}
+/* Two or three images on one Markdown line: a row of equal tiles (rehypeFigure). */
+.prose figure.media.row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.prose figure.media.row-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.prose figure.media.row img {
+  height: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+.prose figure.media.row figcaption {
+  grid-column: 1 / -1;
+  margin-top: -2px;
+}
 .prose figcaption {
   margin-top: 10px;
   font-size: 14px;

@@ -48,9 +48,3 @@ export function readingTime(body = ''): string {
 export function formatDate(d: Date): string {
   return d.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
 }
-
-/** Sequential section numbers ("01", "02", …) so hidden sections leave no gap. */
-export function sectionCounter() {
-  let n = 0;
-  return () => String(++n).padStart(2, '0');
-}

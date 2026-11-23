@@ -25,7 +25,7 @@ Inspiration: Lime Duo (limeduo.com), SpaceX, Anduril. Near-black, minimal, one g
 
 - Fonts: name/wordmark Archivo Expanded Black (wdth 125, wght 900); headings and body Inter Tight; labels small uppercase, `0.12em` tracking.
 - Buttons: pill with a round arrow badge (filled accent primary, outlined secondary).
-- Section headers: `01 / Label` + heading, optional "All … ↗" link on the right. Numbers are computed so hidden sections leave no gap.
+- Section headers: plain title only (e.g. "Experience"), optional intro paragraph and "All … ↗" link on the right. No numbers, labels or taglines.
 - No "open to opportunities" pill. No location clock.
 - Top bar: plain at the top of the page; stays pinned while scrolling (slim solid bar on desktop, small floating menu bubble on phones — added 2026-11-14). Name left, links centre (Experience, About, plus Blog/Design when enabled), right: theme toggle (when enabled) + lime Resume pill. Mobile: name, toggle, round menu button.
 - Wording: section names (headings, nav, labels) say "Experience", not "Projects". The word is fine in body text.
