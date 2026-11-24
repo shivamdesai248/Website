@@ -1,6 +1,7 @@
 ---
 title: Aegis Team 707 poster
 kind: Poster
+order: 2
 tools: [Figma]
 image: ./aegis/aegis-poster.jpg
 alt: The Aegis Team 707 poster with a labelled cutaway of the rocket and a panel for each major system

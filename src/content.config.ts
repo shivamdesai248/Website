@@ -101,6 +101,13 @@ const design = defineCollection({
     z.object({
       title: z.string(),
       kind: z.enum(['Render', 'Poster', 'Presentation', 'Diagram', 'Livery']),
+      /** Optional position on the Design page: 1 comes first. Items without one follow, newest date first. */
+      order: z.number().optional(),
+      /** Optional tile shape, width/height, e.g. "1/1" or "4/3". The whole image still shows (`fit: contain`) or fills it (`cover`). */
+      aspect: z
+        .string()
+        .regex(/^\d+(\.\d+)?\s*\/\s*\d+(\.\d+)?$/, 'aspect must look like "4/3"')
+        .optional(),
       tools: z.array(z.string()).default([]),
       image: image(),
       alt: z.string(),

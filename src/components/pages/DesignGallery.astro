@@ -22,20 +22,21 @@ const linkLabel = (href: string) => {
     </div>
 
   </section>
-  <section class="container grid" aria-label="Design work">
+  <section class="container works" data-masonry aria-label="Design work">
     {
       items.map((d) => (
         <figure class="item">
           {/* Frame opens: the file in `href` (e.g. a PDF), else the write-up for a clip, else the full-size image. */}
           <a
-            class:list={['frame', `fit-${d.data.fit}`]}
+            class:list={['frame', `fit-${d.data.fit}`, { 'has-aspect': d.data.aspect }]}
+            style={d.data.aspect ? `--aspect: ${d.data.aspect}` : undefined}
             href={d.data.href ? url(d.data.href) : d.data.video && d.data.post ? url(`/blog/${d.data.post}`) : d.data.image.src}
             {...(d.data.video && d.data.post && !d.data.href ? {} : { target: '_blank', rel: 'noopener' })}
           >
             {d.data.video ? (
-              <video src={url(d.data.video)} poster={d.data.image.src} data-loop autoplay muted loop playsinline preload="metadata" aria-label={d.data.alt} />
+              <video src={url(d.data.video)} poster={d.data.image.src} width={d.data.image.width} height={d.data.image.height} data-loop autoplay muted loop playsinline preload="metadata" aria-label={d.data.alt} />
             ) : (
-              <Image src={d.data.image} alt={d.data.alt} widths={[640, 1200, 1800]} sizes="(max-width: 760px) 100vw, 50vw" />
+              <Image src={d.data.image} alt={d.data.alt} widths={[640, 1200, 1800]} sizes="(max-width: 760px) 100vw, 33vw" />
             )}
           </a>
           <figcaption>
@@ -73,6 +74,44 @@ const linkLabel = (href: string) => {
     )
   }
 </Base>
+<script>
+  // Row-first masonry: item 1, 2, 3 run across the top, then each next item drops into the
+  // shortest column. Column count matches the CSS fallback (300px min column, 20px gap, max 3).
+  const box = document.querySelector<HTMLElement>('[data-masonry]');
+  if (box) {
+    const items = Array.from(box.querySelectorAll<HTMLElement>(':scope > .item'));
+    let current = 0;
+    const place = () => {
+      const cols = Math.max(1, Math.min(3, Math.floor((box.clientWidth + 20) / (300 + 20))));
+      if (cols === current) return;
+      current = cols;
+      box.querySelectorAll(':scope > .mcol').forEach((c) => c.remove());
+      if (cols === 1) {
+        box.classList.remove('is-placed');
+        items.forEach((it) => box.append(it));
+        return;
+      }
+      box.classList.add('is-placed');
+      const columns = Array.from({ length: cols }, () => {
+        const c = document.createElement('div');
+        c.className = 'mcol';
+        box.append(c);
+        return c;
+      });
+      for (const it of items) {
+        const shortest = columns.reduce((a, b) => (b.offsetHeight < a.offsetHeight ? b : a));
+        shortest.append(it);
+      }
+    };
+    place();
+    let t: number | undefined;
+    window.addEventListener('resize', () => {
+      clearTimeout(t);
+      t = window.setTimeout(place, 120);
+    });
+  }
+</script>
+
 <style>
   .head {
     padding-top: clamp(32px, 6vw, 72px);
@@ -91,32 +130,56 @@ const linkLabel = (href: string) => {
     color: var(--muted);
     font-size: 19px;
   }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px 20px;
+  /* Masonry like the experience-page galleries: CSS columns, each piece keeps its own shape. */
+  .works {
+    columns: 3 300px;
+    column-gap: 20px;
     padding-bottom: clamp(64px, 8vw, 112px);
   }
   .item {
-    margin: 0;
+    break-inside: avoid;
+    margin: 0 0 28px;
   }
   .frame {
     display: block;
-    aspect-ratio: 4 / 3;
-    border-radius: 18px;
+    border-radius: 14px;
     overflow: hidden;
     border: 1px solid var(--line);
-    background: radial-gradient(ellipse at 50% 60%, var(--accent-soft), transparent 70%), var(--surface);
+    background: var(--surface);
   }
   .frame :global(img),
   .frame video {
+    display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
     transition: transform 0.5s ease;
   }
-  .frame.fit-contain :global(img) {
+  /* With JS, items are placed left to right into the shortest column (script below),
+     so the page reads in `order`. Without JS, plain CSS columns are the fallback. */
+  .works.is-placed {
+    columns: auto;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .works :global(.mcol) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  /* `aspect:` in frontmatter: fixed tile shape; the image fills it or fits inside it. */
+  .frame.has-aspect {
+    aspect-ratio: var(--aspect);
+  }
+  .frame.has-aspect :global(img),
+  .frame.has-aspect video {
+    height: 100%;
+    object-fit: cover;
+  }
+  .frame.has-aspect.fit-contain :global(img) {
     object-fit: contain;
+  }
+  /* Transparent renders: a little breathing room on the surface colour. */
+  .frame.fit-contain :global(img) {
     padding: 20px;
   }
   .frame:hover :global(img),
@@ -164,16 +227,16 @@ const linkLabel = (href: string) => {
   .insp a {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding-block: clamp(22px, 3vw, 32px);
+    gap: 4px;
+    padding-block: 18px;
     text-decoration: none;
     color: var(--fg);
   }
   .i-name {
-    font-size: clamp(24px, 3.4vw, 44px);
+    font-size: clamp(20px, 1.8vw, 24px);
     font-weight: 500;
-    letter-spacing: -0.03em;
-    line-height: 1.08;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
     transition: color 0.2s ease;
   }
   .arr {
@@ -192,10 +255,5 @@ const linkLabel = (href: string) => {
   }
   .insp a:hover .arr {
     transform: translate(2px, -2px);
-  }
-  @media (max-width: 760px) {
-    .grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
   }
 </style>

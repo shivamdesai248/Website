@@ -1,6 +1,7 @@
 ---
 title: Aegis livery
 kind: Livery
+order: 1
 tools: [Figma]
 image: ./aegis/aegis-livery-clip.jpg
 alt: Slow pan up Aegis showing the sponsor section, gold vines and AEGIS wordmark against a cloudy sky

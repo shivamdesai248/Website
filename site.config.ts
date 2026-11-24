@@ -18,7 +18,7 @@ function flag(name: string, fallback: boolean): boolean {
 
 export const site = {
   name: 'Shivam Desai',
-  role: 'Engineer',
+  role: 'Embedded | Mechanical | Avionics Integration',
   description:
     'Shivam Desai — embedded software engineer working across firmware, electronics and mechanical design. Garmin, SOAR hybrid rockets, and a Hall effect thruster.',
   email: 'shivamdesai2404@gmail.com',
@@ -41,7 +41,7 @@ export const site = {
     /** Design gallery page, nav link and home teaser. */
     design: flag('SITE_DESIGN', true),
     /** Embedded C++ notes: /cpp hub, topic pages and nav link. */
-    cpp: flag('SITE_CPP', true),
+    cpp: flag('SITE_CPP', false),
     /** Light/dark toggle. When false the site is the default mode only. */
     themeToggle: flag('SITE_THEME_TOGGLE', true),
     /** Include posts/items marked `draft: true` (for previewing only — keep false). */
