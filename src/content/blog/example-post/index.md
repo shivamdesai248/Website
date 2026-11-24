@@ -18,7 +18,7 @@ documents:
     file: documents/aegis/aegis-team-707-poster.pdf
     description: Optional one-line description under the title.
 
-draft: false                  # true = never published, even when the blog is on
+draft: true                  # true = never published, even when the blog is on
 ---
 
 <!-- HTML comments like this one are notes to yourself: they are removed from the published page. -->
