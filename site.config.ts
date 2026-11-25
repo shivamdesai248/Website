@@ -51,6 +51,8 @@ export const site = {
     themeToggle: flag('SITE_THEME_TOGGLE', true),
     /** Include posts/items marked `draft: true` (for previewing only — keep false). */
     showDrafts: flag('SITE_DRAFTS', false),
+    /** Photo reels under roles on the Resume page (set per role with `reel:` in src/data/resume.ts). */
+    resumeReels: flag('SITE_RESUME_REELS', true),
   },
 
   /**

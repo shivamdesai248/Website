@@ -2,8 +2,8 @@
 title: SOAR
 org: SOAR
 role: VP Software · Avionics Integration · Mechanical Design
-period: Sep 2022 – Present
-summary: Flight software, avionics integration and mechanical design for the Ouroboros, Aegis and Athena hybrid rockets at the Student Organization for Aerospace Research.
+period: Sep 2022 – Aug 2026
+summary: Flight software, avionics integration and mechanical design for Ouroboros I, Ouroboros II and Aegis hybrid rockets at the Student Organization for Aerospace Research.
 order: 1
 tags: [C++, FreeRTOS, Avionics, SolidWorks, ANSYS, DfAM]
 # Card image on the home page

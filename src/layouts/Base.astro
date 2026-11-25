@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { site } from '../../site.config';
 import TopBar from '../components/TopBar.astro';
 import Footer from '../components/Footer.astro';
+import Lightbox from '../components/Lightbox.astro';
 
 interface Props {
   title?: string;
@@ -58,6 +59,7 @@ const ogImage = image ? new URL(image, Astro.site).href : undefined;
       <slot />
     </main>
     <Footer />
+    <Lightbox />
     {/* GIF-style clips (Markdown video ending in #loop) pause and get controls when the visitor prefers reduced motion. */}
     <script is:inline>
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

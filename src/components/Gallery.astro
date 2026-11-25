@@ -1,6 +1,7 @@
 ---
 /**
- * Masonry photo gallery with a lightbox (see docs/DESIGN.md §5 "Gallery").
+ * Masonry photo gallery (see docs/DESIGN.md §5 "Gallery"). Clicking a photo opens the
+ * shared Lightbox (src/components/Lightbox.astro).
  * - Photos keep their own shape and fill their box; columns flow and reflow by width.
  * - Click a photo to open it large over a blurred page. Esc / click outside closes;
  *   ← → (or the buttons) move between photos.
@@ -26,6 +27,7 @@ const full = await Promise.all(
           <button
             type="button"
             class="tile-btn"
+            data-lb="gallery"
             data-full={full[i].src}
             data-caption={g.caption ?? ''}
             data-alt={g.alt}
@@ -39,71 +41,6 @@ const full = await Promise.all(
     }
   </div>
 </section>
-
-<div class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Photo viewer">
-  <button type="button" class="lb-btn lb-close" aria-label="Close">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18" /></svg>
-  </button>
-  <button type="button" class="lb-btn lb-prev" aria-label="Previous photo">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 5l-7 7 7 7" /></svg>
-  </button>
-  <figure class="lb-figure">
-    <img class="lb-img" alt="" />
-    <figcaption class="lb-caption"></figcaption>
-  </figure>
-  <button type="button" class="lb-btn lb-next" aria-label="Next photo">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7" /></svg>
-  </button>
-</div>
-
-<script>
-  const box = document.querySelector<HTMLElement>('.lightbox');
-  const tiles = [...document.querySelectorAll<HTMLButtonElement>('.tile-btn')];
-  if (box && tiles.length) {
-    const img = box.querySelector<HTMLImageElement>('.lb-img')!;
-    const cap = box.querySelector<HTMLElement>('.lb-caption')!;
-    let index = 0;
-    let lastFocus: HTMLElement | null = null;
-
-    const show = (i: number) => {
-      index = (i + tiles.length) % tiles.length;
-      const t = tiles[index];
-      img.src = t.dataset.full!;
-      img.alt = t.dataset.alt ?? '';
-      cap.textContent = t.dataset.caption ?? '';
-      cap.hidden = !t.dataset.caption;
-    };
-    const open = (i: number) => {
-      lastFocus = document.activeElement as HTMLElement;
-      show(i);
-      box.hidden = false;
-      document.body.style.overflow = 'hidden';
-      requestAnimationFrame(() => box.classList.add('lb-open'));
-      box.querySelector<HTMLButtonElement>('.lb-close')!.focus();
-    };
-    const close = () => {
-      box.classList.remove('lb-open');
-      document.body.style.overflow = '';
-      setTimeout(() => (box.hidden = true), 200);
-      lastFocus?.focus();
-    };
-
-    tiles.forEach((t, i) => t.addEventListener('click', () => open(i)));
-    box.querySelector('.lb-close')!.addEventListener('click', close);
-    box.querySelector('.lb-prev')!.addEventListener('click', () => show(index - 1));
-    box.querySelector('.lb-next')!.addEventListener('click', () => show(index + 1));
-    box.addEventListener('click', (e) => {
-      if (e.target === box) close();
-    });
-    if (tiles.length < 2) box.querySelectorAll<HTMLElement>('.lb-prev, .lb-next').forEach((b) => (b.hidden = true));
-    document.addEventListener('keydown', (e) => {
-      if (box.hidden) return;
-      if (e.key === 'Escape') close();
-      if (e.key === 'ArrowLeft') show(index - 1);
-      if (e.key === 'ArrowRight') show(index + 1);
-    });
-  }
-</script>
 
 <style>
   .gallery-wrap {
@@ -148,91 +85,4 @@ const full = await Promise.all(
     color: var(--muted);
   }
 
-  /* Lightbox */
-  .lightbox {
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    padding: clamp(16px, 4vw, 56px);
-    background: rgba(var(--overlay-rgb), 0.55);
-    -webkit-backdrop-filter: blur(18px);
-    backdrop-filter: blur(18px);
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-  .lightbox[hidden] {
-    display: none;
-  }
-  .lightbox.lb-open {
-    opacity: 1;
-  }
-  .lb-figure {
-    margin: 0;
-    max-width: min(1400px, 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 0;
-  }
-  .lb-img {
-    max-width: 100%;
-    max-height: calc(100vh - 160px);
-    width: auto;
-    height: auto;
-    border-radius: 14px;
-    background: var(--surface);
-  }
-  .lb-caption {
-    margin-top: 12px;
-    font-size: 15px;
-    color: var(--on-photo-muted);
-    text-align: center;
-  }
-  .lb-btn {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 1px solid rgba(var(--overlay-rgb), 0.2);
-    background: var(--surface);
-    color: var(--fg);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-  }
-  .lb-btn:hover {
-    background: var(--accent);
-    color: var(--on-accent);
-  }
-  .lb-btn svg {
-    width: 18px;
-    height: 18px;
-  }
-  .lb-close {
-    position: absolute;
-    top: clamp(16px, 3vw, 28px);
-    right: clamp(16px, 3vw, 28px);
-  }
-  @media (max-width: 600px) {
-    .lb-prev,
-    .lb-next {
-      position: absolute;
-      bottom: 20px;
-    }
-    .lb-prev {
-      left: calc(50% - 54px);
-    }
-    .lb-next {
-      right: calc(50% - 54px);
-    }
-    .lb-img {
-      max-height: calc(100vh - 200px);
-    }
-  }
 </style>

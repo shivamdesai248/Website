@@ -1,4 +1,5 @@
 ---
+import Reel from '../components/Reel.astro';
 import Base from '../layouts/Base.astro';
 import { site } from '../../site.config';
 import { url } from '../lib/url';
@@ -38,7 +39,7 @@ const [first, last] = site.name.toUpperCase().split(' ');
       <h2 id="exp" class="label r-h">Experience</h2>
       <ol class="timeline">
         {
-          roles.map((r) => (
+          roles.map((r, i) => (
             <li class="role">
               <p class="label when">{r.period}</p>
               <div>
@@ -47,11 +48,25 @@ const [first, last] = site.name.toUpperCase().split(' ');
                   {r.experience ? <a href={url(`/experience/${r.experience}`)}>{r.org} <span aria-hidden="true">↗</span></a> : r.org}
                   {r.team && <span class="muted"> · {r.team}</span>}
                 </p>
-                <ul class="bullets">
-                  {r.bullets.map((b) => (
-                    <li>{b}</li>
-                  ))}
-                </ul>
+                {r.bullets.length > 0 && (
+                  <ul class="bullets">
+                    {r.bullets.map((b) => (
+                      <li>{b}</li>
+                    ))}
+                  </ul>
+                )}
+                {site.features.resumeReels && r.reel && r.reel.length > 0 && <Reel items={r.reel} id={`${i}`} />}
+                {r.groups?.map((g, gi) => (
+                  <>
+                    <h4 class="label r-group">{g.name}</h4>
+                    <ul class="bullets">
+                      {g.bullets.map((b) => (
+                        <li>{b}</li>
+                      ))}
+                    </ul>
+                    {site.features.resumeReels && g.reel && g.reel.length > 0 && <Reel items={g.reel} id={`${i}-${gi}`} />}
+                  </>
+                ))}
               </div>
             </li>
           ))
@@ -201,6 +216,14 @@ const [first, last] = site.name.toUpperCase().split(' ');
   }
   .r-org a:hover {
     color: var(--accent-ink);
+  }
+  /* Sub-section heading inside a role (e.g. SOAR "Avionics and software"). */
+  .r-group {
+    margin: 22px 0 0;
+    color: var(--fg);
+  }
+  .r-group + .bullets {
+    margin-top: 8px;
   }
   .bullets {
     margin: 14px 0 0;

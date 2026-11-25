@@ -1,0 +1,158 @@
+---
+/**
+ * Small sideways-scrolling photo reel (Resume page roles). Optional: render only when there are items.
+ * Photos keep their own shape at a fixed height; swipe/scroll sideways, or use the arrows on desktop.
+ * Click a photo to open the shared Lightbox; ← → move within this reel.
+ */
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+export interface ReelItem {
+  image: ImageMetadata;
+  alt: string;
+  caption?: string;
+}
+interface Props {
+  items: ReelItem[];
+  /** Unique per reel so the lightbox steps through this reel only. */
+  id: string;
+}
+const { items, id } = Astro.props;
+const full = await Promise.all(
+  items.map((g) => getImage({ src: g.image, width: Math.min(2200, g.image.width), format: 'webp' })),
+);
+---
+<div class="reel" data-reel>
+  <ul class="track">
+    {
+      items.map((g, i) => (
+        <li>
+          <button
+            type="button"
+            class="shot"
+            data-lb={`reel-${id}`}
+            data-full={full[i].src}
+            data-alt={g.alt}
+            data-caption={g.caption ?? ''}
+            aria-label={`View larger: ${g.alt}`}
+          >
+            <Image src={g.image} alt={g.alt} widths={[320, 640]} sizes="320px" />
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+  <button type="button" class="nav prev" aria-label="Scroll back" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 5l-7 7 7 7" /></svg>
+  </button>
+  <button type="button" class="nav next" aria-label="Scroll forward" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7" /></svg>
+  </button>
+</div>
+
+<script>
+  // Arrows appear only when the reel overflows, and hide at each end.
+  document.querySelectorAll<HTMLElement>('[data-reel]').forEach((reel) => {
+    const track = reel.querySelector<HTMLElement>('.track')!;
+    const prev = reel.querySelector<HTMLButtonElement>('.prev')!;
+    const next = reel.querySelector<HTMLButtonElement>('.next')!;
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      prev.hidden = track.scrollLeft <= 2;
+      next.hidden = track.scrollLeft >= max - 2;
+    };
+    const step = (dir: number) => track.scrollBy({ left: dir * track.clientWidth * 0.8, behavior: 'smooth' });
+    prev.addEventListener('click', () => step(-1));
+    next.addEventListener('click', () => step(1));
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    window.addEventListener('load', update);
+    update();
+  });
+</script>
+
+<style>
+  .reel {
+    position: relative;
+    margin-top: 16px;
+  }
+  .track {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 6px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+  .track li {
+    flex: none;
+    scroll-snap-align: start;
+  }
+  .shot {
+    display: block;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface);
+    cursor: zoom-in;
+  }
+  .shot :global(img) {
+    display: block;
+    height: 140px;
+    width: auto;
+    transition: transform 0.4s ease;
+  }
+  .shot:hover :global(img) {
+    transform: scale(1.04);
+  }
+  .nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--fg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .nav[hidden] {
+    display: none;
+  }
+  .nav:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .nav svg {
+    width: 16px;
+    height: 16px;
+  }
+  .prev {
+    left: -6px;
+  }
+  .next {
+    right: -6px;
+  }
+  /* Touch screens swipe instead. */
+  @media (hover: none) {
+    .nav {
+      display: none;
+    }
+  }
+  @media (max-width: 700px) {
+    .shot :global(img) {
+      height: 110px;
+    }
+  }
+</style>

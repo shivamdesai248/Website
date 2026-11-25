@@ -1,0 +1,168 @@
+---
+/**
+ * Site-wide photo viewer (included once in Base.astro). Used by Gallery and Reel:
+ * give any button data-lb="<group>", data-full (large image URL), data-alt and optional data-caption.
+ * Click opens it over a blurred page; Esc / click outside closes; ← → move within the group.
+ */
+---
+<div class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button type="button" class="lb-btn lb-close" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18" /></svg>
+  </button>
+  <button type="button" class="lb-btn lb-prev" aria-label="Previous photo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 5l-7 7 7 7" /></svg>
+  </button>
+  <figure class="lb-figure">
+    <img class="lb-img" alt="" />
+    <figcaption class="lb-caption"></figcaption>
+  </figure>
+  <button type="button" class="lb-btn lb-next" aria-label="Next photo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7" /></svg>
+  </button>
+</div>
+
+<script>
+  // One lightbox for the whole site. Any button with data-lb="<group>" opens it;
+  // ← → move between buttons that share the same group.
+  const box = document.querySelector<HTMLElement>('.lightbox');
+  if (box) {
+    const img = box.querySelector<HTMLImageElement>('.lb-img')!;
+    const cap = box.querySelector<HTMLElement>('.lb-caption')!;
+    const arrows = box.querySelectorAll<HTMLElement>('.lb-prev, .lb-next');
+    let tiles: HTMLButtonElement[] = [];
+    let index = 0;
+    let lastFocus: HTMLElement | null = null;
+
+    const show = (i: number) => {
+      index = (i + tiles.length) % tiles.length;
+      const t = tiles[index];
+      img.src = t.dataset.full!;
+      img.alt = t.dataset.alt ?? '';
+      cap.textContent = t.dataset.caption ?? '';
+      cap.hidden = !t.dataset.caption;
+    };
+    const open = (btn: HTMLButtonElement) => {
+      tiles = [...document.querySelectorAll<HTMLButtonElement>(`[data-lb="${btn.dataset.lb}"]`)];
+      arrows.forEach((b) => (b.hidden = tiles.length < 2));
+      lastFocus = btn;
+      show(tiles.indexOf(btn));
+      box.hidden = false;
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => box.classList.add('lb-open'));
+      box.querySelector<HTMLButtonElement>('.lb-close')!.focus();
+    };
+    const close = () => {
+      box.classList.remove('lb-open');
+      document.body.style.overflow = '';
+      setTimeout(() => (box.hidden = true), 200);
+      lastFocus?.focus();
+    };
+
+    document.addEventListener('click', (e) => {
+      const btn = (e.target as Element).closest?.('[data-lb]') as HTMLButtonElement | null;
+      if (btn) open(btn);
+    });
+    box.querySelector('.lb-close')!.addEventListener('click', close);
+    box.querySelector('.lb-prev')!.addEventListener('click', () => show(index - 1));
+    box.querySelector('.lb-next')!.addEventListener('click', () => show(index + 1));
+    box.addEventListener('click', (e) => {
+      if (e.target === box) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (box.hidden) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') show(index - 1);
+      if (e.key === 'ArrowRight') show(index + 1);
+    });
+  }
+</script>
+
+<style>
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: clamp(16px, 4vw, 56px);
+    background: rgba(var(--overlay-rgb), 0.55);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .lightbox[hidden] {
+    display: none;
+  }
+  .lightbox.lb-open {
+    opacity: 1;
+  }
+  .lb-figure {
+    margin: 0;
+    max-width: min(1400px, 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+  }
+  .lb-img {
+    max-width: 100%;
+    max-height: calc(100vh - 160px);
+    width: auto;
+    height: auto;
+    border-radius: 14px;
+    background: var(--surface);
+  }
+  .lb-caption {
+    margin-top: 12px;
+    font-size: 15px;
+    color: var(--on-photo-muted);
+    text-align: center;
+  }
+  .lb-btn {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(var(--overlay-rgb), 0.2);
+    background: var(--surface);
+    color: var(--fg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .lb-btn:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .lb-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+  .lb-close {
+    position: absolute;
+    top: clamp(16px, 3vw, 28px);
+    right: clamp(16px, 3vw, 28px);
+  }
+  @media (max-width: 600px) {
+    .lb-prev,
+    .lb-next {
+      position: absolute;
+      bottom: 20px;
+    }
+    .lb-prev {
+      left: calc(50% - 54px);
+    }
+    .lb-next {
+      right: calc(50% - 54px);
+    }
+    .lb-img {
+      max-height: calc(100vh - 200px);
+    }
+  }
+</style>

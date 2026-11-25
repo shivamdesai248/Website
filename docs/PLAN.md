@@ -74,7 +74,7 @@ See `docs/blog-post-template.md` and the example post in `src/content/blog/examp
   - **/experience/soar/embedded** — Embedded engineering (flight software, avionics architecture, hardware testing)
   - **/experience/soar/mechanical** — Mechanical engineering (avionics bays, RWS, battery packs, FEA)
   - Text on all three is a draft/placeholder from the resume; image captions need checking
-- **/experience/garmin** — intern (MSS, OPT) and full-time (Sensor Core). Public-safe only.
+- **/experience/garmin** — intern (MultiSport Sensors, Optical Platform Technology) and full-time (Sensor Core). Public-safe only: team, released-product and tool names are fine; don't name manufacturing locations or unreleased products.
 - **/resume** — themed web page (no PDF). Data in `src/data/resume.ts`.
 - **/design** — renders, posters, presentations (built, hidden at launch)
 - **/blog**, **/blog/[post]** — built, hidden at launch

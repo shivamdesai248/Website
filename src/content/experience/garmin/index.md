@@ -36,4 +36,4 @@ I joined the **Sensor Core** platform team full time. Sensor Core is a software 
 - Converted a legacy C codebase to a C++ architecture, and designed an extensible **C++ biosensor driver framework** for next-generation biosensors.
 - Worked on next-generation biosensor features and PPG drivers, plus mechanical end-of-life testing and data-collection watch interfaces.
 - Built **FARM** (Fake AFE Register Map), a mocking framework that enabled end-to-end testing of analog front-end driver code without physical hardware.
-- Implemented and debugged a new C++ **manufacturing test framework**, working with teams in Taiwan to resolve production sensor noise and manufacturing test failures.
+- Implemented and debugged a new C++ **manufacturing test framework**, working with manufacturing teams to resolve production sensor noise and test failures.
