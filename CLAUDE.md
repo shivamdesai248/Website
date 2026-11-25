@@ -33,6 +33,7 @@ Read this first in every session. Then read `docs/PROGRESS.md` to see where work
 - `src/layouts/Base.astro` — page shell, theme script, top bar, footer
 - `src/components/` — UI pieces (`TopBar`, `ThemeToggle.tsx`, `MobileMenu.tsx`, `Pill`, `SectionHeader`, …)
 - `src/data/resume.ts` — single source for the resume page and the home page skills
+- `site.config.ts` → `homeSections` (which home sections show, in order) and `navExtra` (top-bar links after those). `src/lib/nav.ts` builds the top bar from them; `src/pages/index.astro` renders sections in that order.
 - `src/data/inspiration.ts` — the "Inspiration" list at the bottom of the Design page (name, link, optional one-line note)
 - `src/data/intros.ts` — Blog and Design intro paragraphs, shown on those pages and under their home-page sections
 - `src/content/experience/<slug>/index.md` — AstroPulse, SOAR, Garmin pages

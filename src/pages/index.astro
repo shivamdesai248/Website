@@ -1,99 +1,158 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import { blogIntro } from '../data/intros';
+import { blogIntro, designIntro, designAbout } from '../data/intros';
 import ExperienceCard from '../components/ExperienceCard.astro';
 import PostCard from '../components/PostCard.astro';
 import Pill from '../components/Pill.astro';
 import { site } from '../../site.config';
 import { url } from '../lib/url';
-import { getExperiences, getPosts } from '../lib/content';
+import { getExperiences, getPosts, getDesignItems } from '../lib/content';
+import portrait from '../assets/about/caraxes-static-fire.jpg';
 
 const experiences = await getExperiences();
 const posts = (await getPosts()).slice(0, 3);
+/** First three Design items (by `order`), for the optional home Design section. */
+const designItems = (await getDesignItems()).slice(0, 3);
 
-/** DRAFT copy — Shivam to review and rewrite in his own words. */
-const principles = [
-  {
-    title: 'Work across the boundary',
-    body: "Firmware bugs are often electrical problems, and mechanical constraints shape the software. I'd rather understand the whole system than pass problems over a wall.",
-  },
-  {
-    title: 'Test on real hardware early',
-    body: 'Simulation sets the direction; measurements decide. Whether it’s a magnetic field model or a sensor driver, I validate against the real thing as soon as I can.',
-  },
-  {
-    title: 'Build tools that remove friction',
-    body: 'Mock frameworks like FARM, automated test suites, and now AI agents: if a task keeps repeating, I try to make it disappear.',
-  },
-  {
-    title: 'Make it clear to others',
-    body: 'Design reviews, posters and renders are part of the engineering. If people can’t understand a design, they can’t trust it.',
-  },
-];
 ---
 <Base overlayNav>
   <Hero />
 
-  <section id="experience" class="section container">
-    <SectionHeader title="Experience" />
-    <div class="xgrid">
-      {experiences.map((e) => <ExperienceCard entry={e} />)}
-    </div>
-  </section>
-
-  <section id="about" class="section container">
-    <SectionHeader title="About" />
-    <div class="about">
-      <div class="about-intro">
-        <p>
-          I’m an embedded software engineer with a mechatronics background. I studied software engineering at the University of Calgary, but my favourite work has always been where code meets hardware: rocket avionics, a plasma thruster, and wearable sensors.
-        </p>
-        <p class="muted">
-          Today I write firmware at Garmin. Outside work I’m still building things with SOAR, and still most interested in problems that need software, electronics and mechanical design at the same time.
-        </p>
-      </div>
-      <ol class="principles">
-        {
-          principles.map((p, i) => (
-            <li>
-              <span class="label p-num">{String(i + 1).padStart(2, '0')}</span>
-              <div>
-                <h3>{p.title}</h3>
-                <p>{p.body}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
-
-
+  {/* Sections render in the order of `homeSections` in site.config.ts. */}
   {
-    site.features.blog && posts.length > 0 && (
-      <section id="blog" class="section container">
-        <SectionHeader title="Blog" intro={blogIntro} />
-        <div class="pgrid">
-          {posts.map((p) => <PostCard post={p} />)}
-        </div>
-        <div class="more">
-          <Pill href={url('/blog')} variant="secondary">All posts</Pill>
-        </div>
-      </section>
-    )
+    site.homeSections.map((name) => (
+      <Fragment>
+        {name === 'about' && (
+          <section id="about" class="section container">
+            <SectionHeader title="About" />
+            <div class="about">
+              <div class="about-intro">
+                <!-- <p>
+                  I am an engineer! While I picked software engineering as my major, I am most interested in engineering problems as a whole. I satiated this hunger by finding the embedded niche, where software, electrical and mechanical engineering meet. I took this a step further by learning mechanical design and manufacturing during my time in university. This has only continued to grow my hunger for engineering and complex problems.
+                </p> -->
+                <!-- <p>
+                  Today I am an embedded software engineer at Garmin, working on middleware (low level and application level device support), building a common platform for sensor devices. My experiences and work style have occasionally led to an unorthodox works style. When encountering issues with the hardware I work with, I love to read the schematics, figure out electrical issues and go down to the lab and make my own mods. If I could I would also make my own mechanical prototypes. 
+                </p> -->
+                <p>
+                  I'm an embedded software engineer at Garmin, working on middleware, from low level to application level device support, as part of a common platform for sensor devices. My background has given me a somewhat unorthodox work style. When I hit a hardware issue, I love reading the schematics, looking at the PCB design, tracking down the electrical problem and heading to the lab to make my own mods. I'd build the whole system myself if the company allowed :)
+                </p>
+                <p>
+                  This style stems from being interested in the whole system, from embedded software to mechanical design and simulation. My work spans firmware for sensor drivers, communication protocols, RTOS work and higher level application control such as state machines and thread safe communication designs. I've also enjoyed designing parts for rockets, like the avionics bay, and running the structural analysis on them, and at university I got to work on less typical problems, such as designing injection moulded parts for customers and shaping magnetic fields for my capstone project. I enjoy owning engineering projects end to end, especially complex ones.
+                </p>
+                <p>
+                  I received my bachelor's degree in software engineering with distinction, and a minor in mechatronics, from the University of Calgary. A major focus of mine there was SOAR, the university's rocketry club. I started on the avionics software team, but as the need arose I quickly grew into many roles: firmware development, avionics and propulsion testing, systems integration, and mechanical design and simulation.
+                </p>
+                <p>
+                  Outside of work, I enjoy playing sports, reading and spending time with friends.
+                </p>
+              </div>
+              <figure class="about-photo">
+                <Image src={portrait} alt="Shivam Desai in a SOAR polo and cap, holding a pipe wrench and tape beside the Caraxes rocket motor on its test stand" widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 400px" />
+                <figcaption>First static fire of Caraxes</figcaption>
+              </figure>
+            </div>
+          </section>
+        )}
+        {name === 'experience' && (
+          <section id="experience" class="section container">
+            <SectionHeader title="Experience" />
+            <div class="xgrid">
+              {experiences.map((e) => <ExperienceCard entry={e} />)}
+            </div>
+          </section>
+        )}
+        {name === 'design' && site.features.design && designItems.length > 0 && (
+          <section id="design" class="section container">
+            <SectionHeader title="Design" intro={[designIntro, ...designAbout]} />
+            <div class="dgrid">
+              {designItems.map((d) => (
+                <a class="dthumb" href={url('/design')}>
+                  <Image src={d.data.image} alt={d.data.alt} widths={[480, 800]} sizes="(max-width: 760px) 100vw, 33vw" />
+                  <span class="label">{d.data.kind}</span>
+                  <span class="dname">{d.data.title}</span>
+                </a>
+              ))}
+            </div>
+            <div class="more">
+              <Pill href={url('/design')} variant="secondary">All design work</Pill>
+            </div>
+          </section>
+        )}
+        {name === 'blog' && site.features.blog && posts.length > 0 && (
+          <section id="blog" class="section container">
+            <SectionHeader title="Blog" intro={blogIntro} />
+            <div class="pgrid">
+              {posts.map((p) => <PostCard post={p} />)}
+            </div>
+            <div class="more">
+              <Pill href={url('/blog')} variant="secondary">All posts</Pill>
+            </div>
+          </section>
+        )}
+        {name === 'contact' && (
+          <section id="contact" class="section container contact">
+            <SectionHeader title="Contact" />
+            <p class="muted contact-sub">The best way to reach me is on LinkedIn. I don’t check my personal email very often.</p>
+            <div class="ctas">
+              <Pill href={site.linkedin} external>Message me on LinkedIn</Pill>
+              <Pill href={`mailto:${site.email}`} variant="secondary">{site.email}</Pill>
+            </div>
+          </section>
+        )}
+      </Fragment>
+    ))
+  }
+</Base>
+
+<script>
+  // Jumping to a home-page section (top-bar links, the hero's Experience button):
+  // desktop centres the section in the window; phones put its title just under the top bar.
+  const PHONE = 760;
+  const GAP = 16;
+
+  function targetY(section: HTMLElement): number {
+    const title = section.querySelector('h2') ?? section;
+    const last = section.lastElementChild ?? section;
+    const bar = document.querySelector<HTMLElement>('.topbar');
+    const barH = bar ? bar.getBoundingClientRect().height : 0;
+    const top = title.getBoundingClientRect().top + window.scrollY;
+    const titleAtTop = top - barH - GAP;
+    if (window.innerWidth <= PHONE) return titleAtTop;
+    const bottom = last.getBoundingClientRect().bottom + window.scrollY;
+    const free = window.innerHeight - barH;
+    const centred = top - barH - (free - (bottom - top)) / 2;
+    // Taller than the window: start at the title instead of cutting it off.
+    return Math.min(centred, titleAtTop);
   }
 
-  <section id="contact" class="section container contact">
-    <SectionHeader title="Contact" />
-    <p class="muted contact-sub">The best way to reach me is on LinkedIn. I don’t check my personal email very often.</p>
-    <div class="ctas">
-      <Pill href={site.linkedin} external>Message me on LinkedIn</Pill>
-      <Pill href={`mailto:${site.email}`} variant="secondary">{site.email}</Pill>
-    </div>
-  </section>
-</Base>
+  function go(id: string, smooth: boolean) {
+    const section = document.getElementById(id);
+    if (!section) return false;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: Math.max(0, targetY(section)), behavior: smooth && !reduce ? 'smooth' : 'instant' });
+    return true;
+  }
+
+  document.addEventListener('click', (e) => {
+    const a = (e.target as Element).closest?.('a[href*="#"]') as HTMLAnchorElement | null;
+    if (!a || a.target || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    const link = new URL(a.href, location.href);
+    if (link.pathname !== location.pathname || !link.hash) return;
+    if (go(decodeURIComponent(link.hash.slice(1)), true)) {
+      e.preventDefault();
+      history.pushState(null, '', link.hash);
+    }
+  });
+
+  // Arriving from another page with a hash (e.g. /#experience from a blog post).
+  if (location.hash) {
+    const id = decodeURIComponent(location.hash.slice(1));
+    window.addEventListener('load', () => requestAnimationFrame(() => go(id, false)));
+  }
+</script>
 
 <style>
   .xgrid {
@@ -101,10 +160,37 @@ const principles = [
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
   }
+  .dgrid,
   .pgrid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
+  }
+  /* Home Design section: three 4:3 thumbnails linking to the Design page. */
+  .dthumb {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--fg);
+  }
+  .dthumb :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .dthumb .label {
+    margin-top: 6px;
+  }
+  .dname {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .dthumb:hover .dname {
+    color: var(--accent-ink);
   }
   @media (max-width: 1100px) {
     .xgrid {
@@ -113,58 +199,56 @@ const principles = [
   }
   @media (max-width: 760px) {
     .xgrid,
+    .dgrid,
     .pgrid {
       grid-template-columns: minmax(0, 1fr);
     }
   }
 
+  /* Prose on the left at a comfortable line length (~68 characters), portrait on the right. */
   .about {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    grid-template-columns: minmax(0, 68ch) minmax(240px, 400px);
+    justify-content: space-between;
+    align-items: start;
     gap: clamp(32px, 6vw, 96px);
   }
-  .about-intro p {
-    margin: 0 0 18px;
-    font-size: clamp(19px, 1.6vw, 22px);
-    line-height: 1.55;
+  .about-photo {
+    margin: 6px 0 0;
+    position: sticky;
+    top: var(--sticky-top);
   }
-  .about-intro p.muted {
-    font-size: 17px;
+  .about-photo :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 18px;
+    border: 1px solid var(--line);
   }
-  .principles {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .principles li {
-    display: grid;
-    grid-template-columns: 48px minmax(0, 1fr);
-    gap: 12px;
-    padding: 22px 0;
-    border-top: 1px solid var(--line);
-  }
-  .principles li:last-child {
-    border-bottom: 1px solid var(--line);
-  }
-  .p-num {
-    color: var(--accent-ink);
-    padding-top: 5px;
-  }
-  .principles h3 {
-    margin: 0 0 6px;
-    font-size: 20px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-  }
-  .principles p {
-    margin: 0;
+  .about-photo figcaption {
+    margin-top: 10px;
+    font-size: 14px;
     color: var(--muted);
-    font-size: 16px;
   }
   @media (max-width: 900px) {
     .about {
       grid-template-columns: minmax(0, 1fr);
     }
+    /* On phones and tablets the photo comes first, as a smaller portrait. */
+    .about-photo {
+      order: -1;
+      position: static;
+      max-width: 320px;
+      margin: 0;
+    }
+  }
+  .about-intro p {
+    margin: 0 0 16px;
+    font-size: clamp(17px, 1.25vw, 19px);
+    line-height: 1.6;
+  }
+  .about-intro p.muted {
+    font-size: 17px;
   }
 
   .contact {

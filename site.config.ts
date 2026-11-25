@@ -16,6 +16,11 @@ function flag(name: string, fallback: boolean): boolean {
   return fallback;
 }
 
+/** Sections the home page can show (see `homeSections` below). */
+export type HomeSection = 'about' | 'experience' | 'design' | 'blog' | 'contact';
+/** Links the top bar can show (see `navExtra` below). */
+export type NavItem = HomeSection | 'cpp';
+
 export const site = {
   name: 'Shivam Desai',
   role: 'Embedded | Mechanical | Avionics Integration',
@@ -38,7 +43,7 @@ export const site = {
   features: {
     /** Blog pages, nav link and "Latest writing" section. */
     blog: flag('SITE_BLOG', true),
-    /** Design gallery page, nav link and home teaser. */
+    /** Design gallery page and nav link (and its home section, if listed in homeSections). */
     design: flag('SITE_DESIGN', true),
     /** Embedded C++ notes: /cpp hub, topic pages and nav link. */
     cpp: flag('SITE_CPP', false),
@@ -47,6 +52,21 @@ export const site = {
     /** Include posts/items marked `draft: true` (for previewing only — keep false). */
     showDrafts: flag('SITE_DRAFTS', false),
   },
+
+  /**
+   * Home page sections, top to bottom. Reorder to move them; delete a name to hide it.
+   * Available: 'about', 'experience', 'design', 'blog', 'contact'.
+   * 'design' and 'blog' also need their feature above to be on.
+   */
+  homeSections: ['about', 'experience', 'blog', 'design', 'contact'] as HomeSection[],
+
+  /**
+   * Top bar order: first every section in `homeSections` above, in the same order
+   * (except 'contact'), then these, in this order. Anything already shown is skipped.
+   * Available: 'about', 'experience', 'design', 'blog', 'cpp', 'contact'.
+   * Pages only appear when their feature is on.
+   */
+  navExtra: ['cpp'] as NavItem[],
 } as const;
 
 export type Site = typeof site;
