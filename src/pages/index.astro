@@ -30,13 +30,7 @@ const designItems = (await getDesignItems()).slice(0, 3);
             <SectionHeader title="About" />
             <div class="about">
               <div class="about-intro">
-                <!-- <p>
-                  I am an engineer! While I picked software engineering as my major, I am most interested in engineering problems as a whole. I satiated this hunger by finding the embedded niche, where software, electrical and mechanical engineering meet. I took this a step further by learning mechanical design and manufacturing during my time in university. This has only continued to grow my hunger for engineering and complex problems.
-                </p> -->
-                <!-- <p>
-                  Today I am an embedded software engineer at Garmin, working on middleware (low level and application level device support), building a common platform for sensor devices. My experiences and work style have occasionally led to an unorthodox works style. When encountering issues with the hardware I work with, I love to read the schematics, figure out electrical issues and go down to the lab and make my own mods. If I could I would also make my own mechanical prototypes. 
-                </p> -->
-                <p>
+                {/* <p>
                   I'm an embedded software engineer at Garmin, working on middleware, from low level to application level device support, as part of a common platform for sensor devices. My background has given me a somewhat unorthodox work style (for a software engineer). When I hit a hardware issue, I love reading the schematics, looking at the PCB design, tracking down the electrical problem and heading to the lab to make my own mods. If asked, I'd build the whole system too 😄
                 </p>
                 <p>
@@ -47,10 +41,22 @@ const designItems = (await getDesignItems()).slice(0, 3);
                 </p>
                 <p>
                   Outside of work, I enjoy playing sports, reading and spending time with friends.
+                </p> */}
+                <p>
+                  I'm an embedded software engineer at Garmin, working on middleware for a common platform of sensor devices. My background has given me a somewhat unorthodox work style for a software engineer: when I hit a hardware issue, I love reading the schematics, checking the PCB design and heading to the lab to make my own mods. If asked, I'd build the whole system too 😄
+                </p>
+                <p>
+                  My interests span across all the disciplines. On the software side, I've written firmware for low-level drivers, RTOS tasks, state machines and thread-safe communication designs. On the mechanical side, I've taken parts from CAD through analysis to manufacturing, including a rocket avionics bay, a rocket weigh system and battery packs.
+                </p>
+                <p>
+                  I received my bachelor's in software engineering with distinction, and a minor in mechatronics, from the University of Calgary. A major focus there was SOAR, the university's rocketry club, where I worked on software, avionics and propulsion testing, systems integration, and mechanical design and simulation. Outside SOAR, I worked on less typical projects, such as designing injection moulded parts and magnetic circuits.
+                </p>
+                <p>
+                  Outside of work, I enjoy playing sports, reading and spending time with friends.
                 </p>
               </div>
               <figure class="about-photo">
-                <Image src={portrait} alt="Shivam Desai in a SOAR polo and cap, holding a pipe wrench and tape beside the Caraxes rocket motor on its test stand" widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 460px" />
+                <Image src={portrait} alt="Shivam Desai in a SOAR polo and cap, holding a pipe wrench and tape beside the Caraxes rocket motor on its test stand" widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 380px" />
                 <figcaption>First static fire of Caraxes</figcaption>
               </figure>
             </div>
@@ -208,7 +214,7 @@ const designItems = (await getDesignItems()).slice(0, 3);
   /* Prose on the left at a comfortable line length (~68 characters), portrait on the right. */
   .about {
     display: grid;
-    grid-template-columns: minmax(0, 75ch) minmax(260px, 460px);
+    grid-template-columns: minmax(0, 75ch) minmax(240px, 380px);
     justify-content: space-between;
     align-items: start;
     gap: clamp(32px, 4.5vw, 72px);
