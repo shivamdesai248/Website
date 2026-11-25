@@ -50,7 +50,7 @@ const designItems = (await getDesignItems()).slice(0, 3);
                 </p>
               </div>
               <figure class="about-photo">
-                <Image src={portrait} alt="Shivam Desai in a SOAR polo and cap, holding a pipe wrench and tape beside the Caraxes rocket motor on its test stand" widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 400px" />
+                <Image src={portrait} alt="Shivam Desai in a SOAR polo and cap, holding a pipe wrench and tape beside the Caraxes rocket motor on its test stand" widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 460px" />
                 <figcaption>First static fire of Caraxes</figcaption>
               </figure>
             </div>
@@ -208,10 +208,10 @@ const designItems = (await getDesignItems()).slice(0, 3);
   /* Prose on the left at a comfortable line length (~68 characters), portrait on the right. */
   .about {
     display: grid;
-    grid-template-columns: minmax(0, 68ch) minmax(240px, 400px);
+    grid-template-columns: minmax(0, 75ch) minmax(260px, 460px);
     justify-content: space-between;
     align-items: start;
-    gap: clamp(32px, 6vw, 96px);
+    gap: clamp(32px, 4.5vw, 72px);
   }
   .about-photo {
     margin: 6px 0 0;
