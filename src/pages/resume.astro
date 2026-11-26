@@ -3,6 +3,15 @@ import Reel from '../components/Reel.astro';
 import Base from '../layouts/Base.astro';
 import { site } from '../../site.config';
 import { url } from '../lib/url';
+import { publicFileSize } from '../lib/file-info.mjs';
+
+/** "PDF · 1.2 MB" for a file in public/. */
+const docMeta = (file: string) => {
+  const b = publicFileSize(file.replace(/^\/+/, ''));
+  const size = b >= 1024 * 1024 ? `${(b / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`;
+  const ext = (file.match(/\.([^./]+)$/)?.[1] ?? '').toUpperCase();
+  return `${ext} · ${size}`;
+};
 import { roles, education, skills } from '../data/resume';
 const [first, last] = site.name.toUpperCase().split(' ');
 ---
@@ -52,6 +61,28 @@ const [first, last] = site.name.toUpperCase().split(' ');
                   <ul class="bullets">
                     {r.bullets.map((b) => (
                       <li>{b}</li>
+                    ))}
+                  </ul>
+                )}
+                {r.documents && r.documents.length > 0 && (
+                  <ul class="r-docs">
+                    {r.documents.map((d) => (
+                      <li>
+                        <a class="r-doc" href={url(`/${d.file.replace(/^\/+/, '')}`)} target="_blank" rel="noopener">
+                          <span class="r-doc-text">
+                            <span class="r-doc-title">{d.title}</span>
+                            <span class="label">{docMeta(d.file)}</span>
+                          </span>
+                          <span class="r-doc-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                              <path d="M14 3v5h5" />
+                              <path d="M12 11v6" />
+                              <path d="m9 14 3 3 3-3" />
+                            </svg>
+                          </span>
+                        </a>
+                      </li>
                     ))}
                   </ul>
                 )}
@@ -217,6 +248,72 @@ const [first, last] = site.name.toUpperCase().split(' ');
     color: var(--accent-ink);
   }
   /* Sub-section heading inside a role (e.g. SOAR "Avionics and software"). */
+  /* Documents under a role: a sideways-scrolling row of small cards. */
+  .r-docs {
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0 0 6px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .r-docs::-webkit-scrollbar {
+    display: none;
+  }
+  .r-docs li {
+    flex: none;
+    scroll-snap-align: start;
+  }
+  .r-doc {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 260px;
+    height: 100%;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--fg);
+    text-decoration: none;
+    transition: border-color 0.2s ease;
+  }
+  .r-doc:hover {
+    border-color: var(--line-strong);
+  }
+  .r-doc-icon {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .r-doc-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  .r-doc-title {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.35;
+    transition: color 0.2s ease;
+  }
+  .r-doc:hover .r-doc-title {
+    color: var(--accent-ink);
+  }
+  .r-doc-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
   .r-group {
     margin: 24px 0 0;
     font-size: 18px;

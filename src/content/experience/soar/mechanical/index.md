@@ -9,8 +9,9 @@ coverFit: contain
 coverOnPage: false  # card image only
 stats:
   - { value: '3', label: Avionics bays }
-  - { value: Metal AM, label: Aegis avionics bay }
-  - { value: SolidWorks · ANSYS, label: Design and analysis }
+  - { value:  Avionics Integration | SolidWorks CAD and Simulation | ANSYS, label: Design and analysis }
+  - { value: '4', label: Years }
+  - { value: '3', label: Rockets }
 gallery:
   - image: ./avionics-bay-in-hand.jpg
     alt: Shivam holding a finished avionics bay
@@ -37,8 +38,6 @@ gallery:
     alt: Rear view render of the avionics bay
     caption: Avionics bay, rear view
 ---
-
-<!-- PLACEHOLDER text from the resume — Shivam to rewrite, and check every image caption. -->
 
 ## Overview
 

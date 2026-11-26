@@ -6,9 +6,10 @@ period: Sep 2025 – Apr 2026
 summary: An electric propulsion thruster for satellites, designed, simulated, machined and assembled for our capstone at the University of Calgary. Gold medal, multidisciplinary engineering.
 order: 3
 tags: [Electric propulsion, ANSYS Maxwell, SolidWorks, Thermal analysis, Machining, Vacuum testing]
-# Home card + image under the stats strip
+# Home card image (coverOnPage: false keeps it off the page itself)
 cover: ./astropulse-thruster-closeup.jpg
 coverAlt: Blender cutaway render of the AstroPulse Hall Effect Thruster with its blue plasma plume
+coverOnPage: false
 # Photo shown first on the page
 heroPhoto: ./team-gold-medal.jpg
 heroAlt: The six-person AstroPulse team wearing their gold medals at the Schulich Engineering Design Fair
@@ -60,35 +61,35 @@ I then scaled the design from the SPT-100, a well-characterised flight thruster,
 | Thrust | 44.3 mN | 22 mN |
 | Specific impulse | 1220 s | 1220 s |
 
-![Cutaway of the final AstroPulse concept with labelled subsystems](./concept.png "The final concept: annular discharge channel, permanent-magnet circuit and centre-mounted cathode")
+![Cutaway of the final AstroPulse concept with labelled subsystems](./concept.png "The final concept: annular discharge channel, permanent-magnet circuit and centre-mounted cathode {width=85%}")
 
 ## Magnetic circuit
 
 The magnetic field is what makes a Hall thruster work, and it was my main subsystem: research, concept, design iterations in ANSYS Maxwell, procurement, manufacturing and testing. The final design uses a 1018 steel core to steer the field from a ring of samarium cobalt magnets, peaking at the exit plane, with shielding rings to keep the field near zero at the anode.
 
-![Render and cross-section of the final magnetic core](./magnetic-core.png "Final magnetic core: ring of samarium cobalt magnets in a 1018 steel core")
+![Render and cross-section of the final magnetic core](./magnetic-core.png "Final magnetic core: ring of samarium cobalt magnets in a 1018 steel core {width=80%}")
 
 I validated it by mounting the core on a milling machine and stepping a gauss meter probe along the channel. The measured peak was **335.2 G against a simulated 338.8 G**, about 1% apart.
 
-![Gauss meter probe in the thruster channel on a milling machine](./gauss-meter.jpg "Mapping the field with a gauss meter, using the mill as a positioning stage")
+![Gauss meter probe in the thruster channel on a milling machine](./gauss-meter.jpg "Mapping the field with a gauss meter, using the mill as a positioning stage {width=65%}")
 
-![Simulated and measured field strength along the channel](./field-sim-vs-measured.png "Simulated (black) vs measured (green) field along the channel")
+![Simulated and measured field strength along the channel](./field-sim-vs-measured.png "Simulated (black) vs measured (green) field along the channel {width=80%}")
 
 ## Channel walls, anode injector and cover
 
 With the magnetics done, I took on the remaining thruster components to keep the project on schedule: materials selection, sourcing and design of the **alumina channel walls**, the **anode injector** (which also distributes propellant into the channel, and was brazed), and the **thruster cover** that holds the assembly together. Andrew helped with final edits to the anode injector for brazing.
 
-![Render of the anode injector ring and its propellant tubes](./anode-injector.png "Anode injector")
+![Render of the anode injector ring and its propellant tubes](./anode-injector.png "Anode injector {width=40%}")
 
-![Anode injector ring showing its internal flow channel](./anode-injector-channel.png "Anode injector internal flow channel")
+![Anode injector ring showing its internal flow channel](./anode-injector-channel.png "Anode injector internal flow channel {width=70%}")
 
 ## Integration and thermal design
 
 I integrated every thruster component in SolidWorks and used the full assembly to review the design and fix integration issues. After researching typical Hall thruster operating temperatures, I built a **system-level heat transfer model** in SolidWorks. Andrew and Zach Scott turned the results into a thermal-expansion spreadsheet, and Andrew and I used it to set clearances and tolerances for manufacturing.
 
-![Cutaway render of the fully integrated thruster](./integration-render.png "The integrated thruster assembly")
+![Cutaway render of the fully integrated thruster](./integration-render.png "The integrated thruster assembly {width=70%}")
 
-![Heat transfer simulation showing temperatures across the thruster](./heat-transfer.png "System-level heat transfer results")
+![Heat transfer simulation showing temperatures across the thruster](./heat-transfer.png "System-level heat transfer results {width=55%}")
 
 ## Propellant feed system
 
@@ -102,9 +103,9 @@ Having worked on similar systems at SOAR, I laid out the piping and instrumentat
 
 I designed the static test stand to hold the thruster steady in the vacuum chamber and meet vacuum requirements. Andrew designed the small tungsten mount at the front.
 
-![Render of the thruster on its static test stand](./test-stand-render.png "Static test stand design")
+![Render of the thruster on its static test stand](./test-stand-render.png "Static test stand design {width=78%}")
 
-![The thruster on its test stand inside the vacuum chamber](./test-stand-chamber.png "The test stand installed in the chamber")
+![The thruster on its test stand inside the vacuum chamber](./test-stand-chamber.png "The test stand installed in the chamber {width=78%}")
 
 ## Manufacturing and assembly
 
@@ -114,7 +115,7 @@ With Andrew, Zach Scott and Gavin, we machined every thruster component in house
 
 The final stage was vacuum testing with the Department of Physics, working with their vacuum chamber, cryopumps and interfacing systems. I wrote our test procedures for review, sourced the power supplies we needed, and was at every setup, troubleshooting and test session.
 
-![The thruster glowing inside the vacuum chamber](./vacuum-test.jpg "The thruster in vacuum, with a heated tungsten wire")
+![The thruster glowing inside the vacuum chamber](./vacuum-test.jpg "The thruster in vacuum, with a heated tungsten wire {width=78%}")
 
 ## The rest of the system
 

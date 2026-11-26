@@ -38,6 +38,11 @@ export interface Role {
    *   reel: [{ image: mouldPart, alt: 'Injection-moulded enclosure', caption: 'Moulded enclosure' }],
    */
   reel?: ReelItem[];
+  /**
+   * Optional documents under the role (shown as small links). Files go in public/documents/;
+   * `file` is relative to public/, e.g. 'documents/yukon/report.pdf'.
+   */
+  documents?: { title: string; file: string }[];
 }
 
 export const roles: Role[] = [
@@ -155,6 +160,10 @@ export const roles: Role[] = [
     bullets: [
       'Designed custom 3D-printed parts for clients in SolidWorks, turning their requirements into functional, printable CAD models',
       'Designed injection-moulded parts and validated them with SolidWorks injection moulding simulations, checking how the mould fills before committing to tooling',
+    ],
+    documents: [
+      { title: 'Plant pot: material and manufacturing method selection', file: 'documents/yukon/plant-pot-material-and-method-selection.pdf' },
+      { title: 'Plant pot: mass production', file: 'documents/yukon/plant-pot-mass-production.pdf' },
     ],
   },
   {

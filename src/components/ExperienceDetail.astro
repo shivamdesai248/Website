@@ -93,8 +93,8 @@ const {
 
     {
       stats.length > 0 && (
-        <div class="container">
-          <dl class="stats" style={`--cols:${stats.length}`}>
+        <div class="container stats-wrap">
+          <dl class="stats">
             {stats.map((s) => (
               <div>
                 <dt class="label">{s.label}</dt>
@@ -281,15 +281,16 @@ const {
     color: var(--fg-2);
   }
 
+  /* Each stat takes the width its text needs; the spare space is shared out evenly. */
   .stats {
-    display: grid;
-    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    display: flex;
     margin: 0 0 36px;
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
   }
   .stats div {
-    padding: 22px 20px 22px 0;
+    flex: 1 1 auto;
+    padding: 18px 20px 18px 0;
   }
   .stats div + div {
     padding-left: 20px;
@@ -298,15 +299,17 @@ const {
   .stats dt {
     margin-bottom: 6px;
   }
+  /* A step above body text, in lime. */
   .stats dd {
     margin: 0;
-    font-size: clamp(22px, 2.6vw, 36px);
+    font-size: clamp(19px, 1.6vw, 23px);
     font-weight: 500;
-    letter-spacing: -0.02em;
+    line-height: 1.4;
     color: var(--accent-ink);
   }
   @media (max-width: 700px) {
     .stats {
+      display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .stats div + div:nth-child(odd) {
@@ -340,6 +343,10 @@ const {
     grid-template-columns: minmax(180px, 280px) minmax(0, 1fr);
     gap: clamp(24px, 5vw, 80px);
     padding-block: clamp(48px, 7vw, 96px);
+  }
+  /* Straight after the stats bar (no cover image): keep the text close to it. */
+  .stats-wrap + .body {
+    padding-top: 0;
   }
   .tags {
     display: flex;
