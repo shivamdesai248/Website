@@ -34,7 +34,7 @@ const paras = intro === undefined ? [] : Array.isArray(intro) ? intro : [intro];
   /* Same size, line height and colour as the About text; wider, since no photo sits beside it. */
   .sh-intro {
     margin: 14px 0 0;
-    max-width: 940px;
+    max-width: var(--intro-w);
     text-wrap: pretty; /* avoids a single word alone on the last line */
     font-size: clamp(17px, 1.25vw, 19px);
     line-height: 1.6;

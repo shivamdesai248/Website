@@ -154,7 +154,8 @@ const nextLink = { href: url(`/experience/${next.id}`), title: next.data.title }
     padding-bottom: clamp(40px, 6vw, 72px);
   }
   .intro-text {
-    max-width: 680px;
+    max-width: var(--intro-w);
+    text-wrap: pretty;
   }
   .intro-text :global(p) {
     margin: 0 0 18px;

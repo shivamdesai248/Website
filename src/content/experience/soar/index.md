@@ -5,7 +5,7 @@ role: VP Software · Avionics Integration · Mechanical Design
 period: Sep 2022 – Aug 2026
 summary: Flight software, avionics integration and mechanical design for Ouroboros I, Ouroboros II and Aegis hybrid rockets at the Student Organization for Aerospace Research.
 order: 1
-tags: [C++, FreeRTOS, Avionics, SolidWorks, ANSYS, DfAM]
+tags: [C++, FreeRTOS, SolidWorks, Avionics, ANSYS, DfAM]
 # Card image on the home page
 cover: ./soar-launch.jpg
 coverAlt: A SOAR hybrid rocket lifting off the launch rail in a cloud of dust

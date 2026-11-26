@@ -195,6 +195,9 @@ a {
 /* Space taken by the fixed top bar when scrolled. Sticky elements and anchor
    targets use these so nothing hides under the bar. */
 :root {
+  /* How wide intro paragraphs run when nothing sits beside them (home section intros,
+     experience and blog summaries, page intros). Change here to change them all. */
+  --intro-w: 940px;
   --sticky-top: 96px;
 }
 [id] {

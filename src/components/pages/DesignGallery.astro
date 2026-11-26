@@ -126,7 +126,8 @@ const linkLabel = (href: string) => {
   }
   .intro {
     margin: 0;
-    max-width: 620px;
+    max-width: var(--intro-w);
+    text-wrap: pretty;
     color: var(--muted);
     font-size: 19px;
   }
@@ -211,7 +212,8 @@ const linkLabel = (href: string) => {
   }
   .insp-intro {
     margin: 0 0 clamp(20px, 3vw, 32px);
-    max-width: 680px;
+    max-width: var(--intro-w);
+    text-wrap: pretty;
     font-size: clamp(17px, 1.4vw, 19px);
     color: var(--fg-2);
   }

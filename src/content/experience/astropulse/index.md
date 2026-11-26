@@ -3,7 +3,7 @@ title: AstroPulse Hall effect thruster
 org: AstroPulse
 role: Project Lead, Systems Engineer and Mechanical Designer
 period: Sep 2025 – Apr 2026
-summary: An electric propulsion thruster for satellites, designed, simulated, machined and assembled as our software and mechatronics capstone at the University of Calgary. Gold medal, multidisciplinary engineering.
+summary: An electric propulsion thruster for satellites, designed, simulated, machined and assembled for our capstone at the University of Calgary. Gold medal, multidisciplinary engineering.
 order: 3
 tags: [Electric propulsion, ANSYS Maxwell, SolidWorks, Thermal analysis, Machining, Vacuum testing]
 # Home card + image under the stats strip

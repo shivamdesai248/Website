@@ -71,6 +71,7 @@ Fonts are self-hosted (`@fontsource-variable/*`). No Google Fonts, no other fami
 ## 4. Layout and spacing
 
 - Content sits in `.container`: `max-width:1360px`, side padding `clamp(20px, 4vw, 56px)`.
+- Intro paragraphs with nothing beside them (home section intros, experience intros and summaries, blog/design/C++ page intros, blog post descriptions) run to `--intro-w` (940px, set once in `global.css`) with `text-wrap: pretty` so no word sits alone on the last line. Article body text (`.prose`) stays at 720px for comfortable reading.
 - Home sections use `.section` (vertical padding `clamp(64px, 9vw, 128px)`).
 - Article text (`.prose`) is capped at 720px; on wide screens it sits in a two-column grid with a ~260px side column (tags or table of contents).
 - Gaps: 18–20px between cards; 8px between tags; 10px between buttons.
@@ -94,7 +95,7 @@ Reuse these before writing new UI.
 | Component | File | Notes |
 |---|---|---|
 | Pill button | `src/components/Pill.astro` | `variant="primary"` (lime fill) or `"secondary"` (outlined); always has the round arrow badge. Radius 999px. |
-| Section header | `src/components/SectionHeader.astro` | Plain title only (`title`: Experience, Design, About, Blog, Contact) + optional intro paragraph (`intro`; same as the About text: `clamp(17px, 1.25vw, 19px)`, line height 1.6, `--fg`, max 940px — wider than About because no photo sits beside it) + optional "All … ↗" link. No section numbers, no label above it, no tagline as the heading. The title matches the page the section links to (Design, Blog). The home Blog section shows the Blog page's intro, taken from `src/data/intros.ts` so the text is written once. Home page sections and their order come from `homeSections` in `site.config.ts` (currently About, Experience, Blog, Contact); the top bar lists those in the same order (minus Contact), then `navExtra` (Design and C++ live only in the top bar). |
+| Section header | `src/components/SectionHeader.astro` | Plain title only (`title`: Experience, Design, About, Blog, Contact) + optional intro paragraph (`intro`; same as the About text: `clamp(17px, 1.25vw, 19px)`, line height 1.6, `--fg`, max `--intro-w` (940px) — wider than About because no photo sits beside it) + optional "All … ↗" link. No section numbers, no label above it, no tagline as the heading. The title matches the page the section links to (Design, Blog). The home Blog section shows the Blog page's intro, taken from `src/data/intros.ts` so the text is written once. Home page sections and their order come from `homeSections` in `site.config.ts` (currently About, Experience, Blog, Contact); the top bar lists those in the same order (minus Contact), then `navExtra` (Design and C++ live only in the top bar). |
 | Experience card | `src/components/ExperienceCard.astro` | Image well (4:3) + label + title + summary + up to 3 tags + lime arrow badge |
 | Card (generic) | `src/components/Card.astro` | Same look as the experience card; used for experience tracks. `ExperienceCard` wraps it. |
 | Experience write-up | `src/components/ExperienceDetail.astro` | Back link, header, stats strip, cover, tags + prose, gallery, related posts, next link. Used by experience pages and their tracks. |
