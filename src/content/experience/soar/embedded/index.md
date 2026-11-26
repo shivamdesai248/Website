@@ -1,10 +1,12 @@
 ---
 title: Embedded engineering
-summary: Flight software, avionics architecture and hardware bring-up for SOAR's hybrid rockets, from the Ouroboros flight computer to a modular avionics system for Aegis and Athena.
+summary: Flight software, avionics architecture and hardware bring up for SOAR's hybrid rockets, from the Ouroboros flight computer to a modular avionics system for Aegis and future rockets.
 order: 1
 tags: [C++, FreeRTOS, Protocol Buffers, Avionics architecture, PCB bring-up]
-cover: ./cover.jpg
-coverAlt: Render of a stack of avionics circuit boards on a black background
+cover: ./cover-stack.png
+coverAlt: Render of a stack of avionics circuit boards plugged into a backplane
+coverFit: contain
+coverOnPage: false  # card image only
 stats:
   - { value: C++ · FreeRTOS, label: Flight software }
   - { value: '3', label: Rockets }

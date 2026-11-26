@@ -1,5 +1,5 @@
 ---
-title: AstroPulse Hall effect thruster
+title: AstroPulse Hall Effect Thruster
 org: AstroPulse
 role: Project Lead, Systems Engineer and Mechanical Designer
 period: Sep 2025 – Apr 2026
@@ -8,7 +8,7 @@ order: 3
 tags: [Electric propulsion, ANSYS Maxwell, SolidWorks, Thermal analysis, Machining, Vacuum testing]
 # Home card + image under the stats strip
 cover: ./astropulse-thruster-closeup.jpg
-coverAlt: Blender cutaway render of the AstroPulse Hall effect thruster with its blue plasma plume
+coverAlt: Blender cutaway render of the AstroPulse Hall Effect Thruster with its blue plasma plume
 # Photo shown first on the page
 heroPhoto: ./team-gold-medal.jpg
 heroAlt: The six-person AstroPulse team wearing their gold medals at the Schulich Engineering Design Fair
@@ -36,8 +36,6 @@ gallery:
     alt: Thruster on its test stand with propellant lines, during assembly
     caption: Assembly of the propellant lines and test stand
 ---
-
-<!-- DRAFT from the ICR and design report — Shivam to review. Check every image caption. -->
 
 AstroPulse started as my idea: build a working Hall effect thruster, the kind of electric propulsion used on modern satellites, as an undergraduate capstone. I pitched it, put together a team of six, and led the project from concept to vacuum testing. Along the way we raised over $5,000 from sponsors, and AstroPulse won **gold in the multidisciplinary engineering category** at the Schulich Engineering Design Fair.
 

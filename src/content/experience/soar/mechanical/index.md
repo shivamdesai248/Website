@@ -3,8 +3,10 @@ title: Mechanical engineering
 summary: Avionics bays, the Rocket Weigh System and flight battery packs, designed in SolidWorks, checked with FEA and built with additive manufacturing, waterjet and laser cutting.
 order: 2
 tags: [SolidWorks, ANSYS Mechanical, DfAM, FEA, Manufacturing]
-cover: ./cover.jpg
-coverAlt: Avionics bay with flight electronics installed
+cover: ./cover-fea.png
+coverAlt: FEA stress plot of an avionics bay frame, coloured from blue (low stress) to red (high stress)
+coverFit: contain
+coverOnPage: false  # card image only
 stats:
   - { value: '3', label: Avionics bays }
   - { value: Metal AM, label: Aegis avionics bay }

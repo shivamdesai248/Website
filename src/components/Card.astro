@@ -70,7 +70,7 @@ const {
   .media {
     position: relative;
     aspect-ratio: 4 / 3;
-    background: radial-gradient(ellipse at 50% 60%, var(--accent-soft), transparent 70%), var(--surface-2);
+    background: radial-gradient(ellipse at 50% 60%, var(--media-glow), transparent 70%), var(--surface-2);
     overflow: hidden;
   }
   .media :global(img) {
@@ -79,9 +79,10 @@ const {
     object-fit: cover;
     transition: transform 0.5s ease;
   }
+  /* Renders on a transparent background: shown whole, with room around them. */
   .media-contain :global(img) {
     object-fit: contain;
-    padding: 18px;
+    padding: 9% 12%;
   }
   .xcard:hover .media :global(img) {
     transform: scale(1.03);

@@ -9,7 +9,7 @@ date: 2026-11-14
 tags: [reference]
 experience: astropulse       # links the post to /experience/astropulse (astropulse | soar | garmin)
 cover: ./cover.jpg           # image in this post's folder; used on the post and on cards
-coverAlt: "Cutaway render of the AstroPulse Hall effect thruster"
+coverAlt: "Cutaway render of the AstroPulse Hall Effect Thruster"
 
 # Documents section at the end of the post (PDFs open in a new tab, .pptx downloads).
 # `file` is a path inside public/. Type and size are worked out automatically.

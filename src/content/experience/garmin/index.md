@@ -9,6 +9,14 @@ tags: [C++, Embedded protocols, Low level hardware bring-up, SPI / I²C / UART, 
 cover: ./garmin-devices.jpg
 coverOnPage: false  # source photos are small; card only
 coverAlt: A Garmin HRM 600 heart-rate strap and the optical sensor on the back of a fēnix 7 Pro watch
+# Product shots side by side at the top of the page
+heroStrip:
+  - image: ./hero-pedals.jpg
+    alt: Garmin Rally XC 210 dual-sensing power meter pedals
+  - image: ./hero-hrm600.jpg
+    alt: Garmin HRM 600 heart rate monitor strap
+  - image: ./hero-venu4.jpg
+    alt: The back of a Garmin Venu 4 watch with its optical heart rate sensor lit green
 stats:
   - { value: C++, label: Primary language }
   - { value: Sensor Core, label: Current team }

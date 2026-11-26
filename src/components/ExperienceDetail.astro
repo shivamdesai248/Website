@@ -32,6 +32,8 @@ interface Props {
   heroPhoto?: ImageMetadata;
   heroAlt?: string;
   heroPosition?: string;
+  /** Product shots side by side on a white panel above the title (instead of heroPhoto). */
+  heroStrip?: { image: ImageMetadata; alt: string }[];
 }
 const {
   backHref,
@@ -52,6 +54,7 @@ const {
   heroPhoto,
   heroAlt = '',
   heroPosition = '50% 50%',
+  heroStrip = [],
 } = Astro.props;
 ---
 <Base title={title} description={summary}>
@@ -63,8 +66,24 @@ const {
           <PhotoTitle image={heroPhoto} alt={heroAlt} position={heroPosition} label={meta} title={title} />
         ) : (
           <>
-            <p class="label meta">{meta}</p>
-            <h1 class="h-display title">{title}</h1>
+            {heroStrip.length > 0 ? (
+              <div class="spt">
+                <div class="strip" style={`--n:${heroStrip.length}`}>
+                  {heroStrip.map((s) => (
+                    <Image src={s.image} alt={s.alt} widths={[320, 640, Math.min(1000, s.image.width)]} sizes="(max-width: 760px) 33vw, 30vw" loading="eager" />
+                  ))}
+                </div>
+                <div class="spt-text">
+                  <p class="label meta">{meta}</p>
+                  <h1 class="h-display title">{title}</h1>
+                </div>
+              </div>
+            ) : (
+              <>
+                <p class="label meta">{meta}</p>
+                <h1 class="h-display title">{title}</h1>
+              </>
+            )}
           </>
         )
       }
@@ -148,6 +167,99 @@ const {
   .meta {
     margin: 0 0 14px;
   }
+  /* Product shots on white (heroStrip): same 16:7 banner as the photo titles (SOAR,
+     AstroPulse), products filling it, and the title laid over the bottom-left in black on a
+     white fade (the light version of the photo titles' dark fade). White in both themes. */
+  .spt {
+    position: relative;
+    margin-bottom: 28px;
+  }
+  .strip {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(8px, 2vw, 32px);
+    aspect-ratio: 16 / 7;
+    padding: clamp(16px, 2.2vw, 32px) clamp(20px, 3vw, 48px);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .strip :global(img) {
+    display: block;
+    width: 100%;
+    height: 66%;
+    object-fit: contain;
+    object-position: 50% 0;
+  }
+  /* The first product sits above the title, so it stays in the top half. */
+  .strip :global(img:first-child) {
+    height: 52%;
+  }
+  .strip::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 70% at 0% 100%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 70%),
+      linear-gradient(
+        to top,
+        rgba(255, 255, 255, 0.96) 0%,
+        rgba(255, 255, 255, 0.85) 20%,
+        rgba(255, 255, 255, 0.5) 36%,
+        rgba(255, 255, 255, 0.12) 48%,
+        rgba(255, 255, 255, 0) 58%
+      );
+  }
+  .spt-text {
+    position: absolute;
+    left: clamp(24px, 3vw, 48px);
+    right: clamp(24px, 3vw, 48px);
+    bottom: clamp(24px, 3vw, 44px);
+  }
+  .spt .meta {
+    margin: 0 0 12px;
+    color: #55554f;
+  }
+  .spt .title {
+    margin: 0;
+    font-size: clamp(40px, 6.4vw, 96px);
+    max-width: 14ch;
+    color: #0a0a0a;
+  }
+  /* Phone: products only in the panel, then the text below in normal colours. */
+  @media (max-width: 760px) {
+    .strip {
+      padding: 20px 12px;
+    }
+    .strip::after {
+      display: none;
+    }
+    .strip {
+      aspect-ratio: auto;
+      align-items: center;
+    }
+    .strip :global(img),
+    .strip :global(img:first-child) {
+      height: auto;
+      max-height: 160px;
+      object-position: 50% 50%;
+    }
+    .spt-text {
+      position: static;
+      margin-top: clamp(28px, 6vw, 40px);
+    }
+    .spt .meta {
+      color: var(--muted);
+    }
+    .spt .title {
+      color: var(--fg);
+    }
+  }
   .title {
     margin: 0 0 18px;
     font-size: clamp(40px, 6.4vw, 92px);
@@ -210,7 +322,7 @@ const {
     border-radius: 20px;
     overflow: hidden;
     border: 1px solid var(--line);
-    background: radial-gradient(ellipse at 50% 60%, var(--accent-soft), transparent 70%), var(--surface);
+    background: radial-gradient(ellipse at 50% 60%, var(--media-glow), transparent 70%), var(--surface);
   }
   .cover :global(img) {
     width: 100%;

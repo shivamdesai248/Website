@@ -56,6 +56,11 @@ const experience = defineCollection({
       heroAlt: z.string().optional(),
       /** CSS object-position for the hero photo crop, e.g. "50% 80%" to keep people in view. */
       heroPosition: z.string().default('50% 50%'),
+      /**
+       * Alternative to heroPhoto for product shots on white: 2–4 images shown side by side
+       * on a white panel at the top of the page (e.g. Garmin). The title sits below it.
+       */
+      heroStrip: z.array(z.object({ image: image(), alt: z.string() })).default([]),
     }),
 });
 
@@ -79,6 +84,8 @@ const tracks = defineCollection({
       cover: image().optional(),
       coverAlt: z.string().optional(),
       coverFit: z.enum(['cover', 'contain']).default('cover'),
+      /** false = use the cover on the card only, not as a big image at the top of the page. */
+      coverOnPage: z.boolean().default(true),
       stats: z.array(z.object({ value: z.string(), label: z.string() })).default([]),
       gallery: gallery(image),
       documents,
