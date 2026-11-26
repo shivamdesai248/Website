@@ -36,7 +36,7 @@ const [first, last] = site.name.toUpperCase().split(' ');
     </header>
 
     <section class="r-section" aria-labelledby="exp">
-      <h2 id="exp" class="label r-h">Experience</h2>
+      <h2 id="exp" class="h-display h-section r-h">Experience</h2>
       <ol class="timeline">
         {
           roles.map((r, i) => (
@@ -58,7 +58,7 @@ const [first, last] = site.name.toUpperCase().split(' ');
                 {site.features.resumeReels && r.reel && r.reel.length > 0 && <Reel items={r.reel} id={`${i}`} />}
                 {r.groups?.map((g, gi) => (
                   <>
-                    <h4 class="label r-group">{g.name}</h4>
+                    <h4 class="r-group">{g.name}</h4>
                     <ul class="bullets">
                       {g.bullets.map((b) => (
                         <li>{b}</li>
@@ -75,7 +75,7 @@ const [first, last] = site.name.toUpperCase().split(' ');
     </section>
 
     <section class="r-section" aria-labelledby="edu">
-      <h2 id="edu" class="label r-h">Education</h2>
+      <h2 id="edu" class="h-display h-section r-h">Education</h2>
       <div class="role">
         <p class="label when">{education.period}</p>
         <div>
@@ -86,7 +86,7 @@ const [first, last] = site.name.toUpperCase().split(' ');
     </section>
 
     <section class="r-section" aria-labelledby="sk">
-      <h2 id="sk" class="label r-h">Skills</h2>
+      <h2 id="sk" class="h-display h-section r-h">Skills</h2>
       <dl class="r-skills">
         {
           skills.map((g) => (
@@ -177,8 +177,7 @@ const [first, last] = site.name.toUpperCase().split(' ');
     padding-top: 44px;
   }
   .r-h {
-    margin: 0 0 8px;
-    color: var(--accent-ink);
+    margin-bottom: 8px;
   }
   .timeline,
   .r-skills {
@@ -219,7 +218,9 @@ const [first, last] = site.name.toUpperCase().split(' ');
   }
   /* Sub-section heading inside a role (e.g. SOAR "Avionics and software"). */
   .r-group {
-    margin: 22px 0 0;
+    margin: 24px 0 0;
+    font-size: 18px;
+    font-weight: 600;
     color: var(--fg);
   }
   .r-group + .bullets {

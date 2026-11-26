@@ -186,6 +186,20 @@ a {
   letter-spacing: -0.03em;
   line-height: 1.04;
 }
+/* Section titles inside a page (Related writing, Gallery, Documents, resume sections).
+   Use with .h-display. Never use the tiny uppercase .label style for a section title;
+   .label is only for small metadata (dates, file types, "Next"). */
+.h-section {
+  margin: 0 0 clamp(16px, 2.4vw, 28px);
+  font-size: clamp(28px, 3vw, 40px);
+}
+/* Small sidebar heading, e.g. "On this page". */
+.h-side {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--fg);
+}
 .muted {
   color: var(--muted);
 }

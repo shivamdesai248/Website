@@ -1,6 +1,21 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, type SchemaContext } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
+
+/**
+ * Gallery items: a photo (`image: ./file.jpg`) or a short looping clip
+ * (`video: /videos/<folder>/<file>.mp4`, from public/; muted, plays on its own like a GIF).
+ * `aspect` (e.g. "9/16") reserves the clip's space before it loads.
+ */
+const gallery = (image: SchemaContext['image']) =>
+  z
+    .array(
+      z.union([
+        z.object({ image: image(), alt: z.string(), caption: z.string().optional() }),
+        z.object({ video: z.string(), alt: z.string(), caption: z.string().optional(), aspect: z.string().optional() }),
+      ]),
+    )
+    .default([]);
 
 /**
  * Optional Documents section (PDFs, decks). `file` is a path inside public/,
@@ -31,9 +46,7 @@ const experience = defineCollection({
       /** false = use the cover on the home card only (e.g. small source images that blur when shown large). */
       coverOnPage: z.boolean().default(true),
       stats: z.array(z.object({ value: z.string(), label: z.string() })).default([]),
-      gallery: z
-        .array(z.object({ image: image(), alt: z.string(), caption: z.string().optional() }))
-        .default([]),
+      gallery: gallery(image),
       documents,
       /**
        * Optional wide photo shown first on the page (e.g. a team photo). Used by
@@ -67,9 +80,7 @@ const tracks = defineCollection({
       coverAlt: z.string().optional(),
       coverFit: z.enum(['cover', 'contain']).default('cover'),
       stats: z.array(z.object({ value: z.string(), label: z.string() })).default([]),
-      gallery: z
-        .array(z.object({ image: image(), alt: z.string(), caption: z.string().optional() }))
-        .default([]),
+      gallery: gallery(image),
       documents,
     }),
 });

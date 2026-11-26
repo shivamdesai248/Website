@@ -5,17 +5,26 @@
  * - Photos keep their own shape and fill their box; columns flow and reflow by width.
  * - Click a photo to open it large over a blurred page. Esc / click outside closes;
  *   ← → (or the buttons) move between photos.
+ * - Items can also be short clips (`video:`): muted, looping, playing like a GIF (paused
+ *   for visitors who prefer reduced motion). Clips don't open in the lightbox.
+ * - When the gallery is taller than 1.5 screens, a "Skip gallery" button floats at the
+ *   bottom of the screen while the gallery is in view and jumps to whatever comes after it.
  */
 import { Image, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { url } from '../lib/url';
+
+export type GalleryItem =
+  | { image: ImageMetadata; alt: string; caption?: string }
+  | { video: string; alt: string; caption?: string; aspect?: string };
 
 interface Props {
-  items: { image: ImageMetadata; alt: string; caption?: string }[];
+  items: GalleryItem[];
   title?: string;
 }
 const { items, title = 'Gallery' } = Astro.props;
 const full = await Promise.all(
-  items.map((g) => getImage({ src: g.image, width: Math.min(2200, g.image.width), format: 'webp' })),
+  items.map((g) => ('image' in g ? getImage({ src: g.image, width: Math.min(2200, g.image.width), format: 'webp' }) : null)),
 );
 ---
 <section class="container gallery-wrap" aria-labelledby="gallery-title">
@@ -24,23 +33,90 @@ const full = await Promise.all(
     {
       items.map((g, i) => (
         <figure class="tile">
+          {'video' in g ? (
+            <video
+              class="tile-video"
+              src={url(g.video)}
+              muted
+              autoplay
+              loop
+              playsinline
+              preload="metadata"
+              data-loop
+              aria-label={g.alt}
+              style={g.aspect ? `aspect-ratio: ${g.aspect}` : undefined}
+            />
+          ) : (
           <button
             type="button"
             class="tile-btn"
             data-lb="gallery"
-            data-full={full[i].src}
+            data-full={full[i]!.src}
             data-caption={g.caption ?? ''}
             data-alt={g.alt}
             aria-label={`View larger: ${g.alt}`}
           >
             <Image src={g.image} alt={g.alt} widths={[480, 800, 1200]} sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, 33vw" />
           </button>
+          )}
           {g.caption && <figcaption>{g.caption}</figcaption>}
         </figure>
       ))
     }
   </div>
+  <button type="button" class="gskip" hidden>
+    Skip gallery
+    <span class="gskip-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
+    </span>
+  </button>
 </section>
+
+<script>
+  // Show "Skip gallery" only for long galleries (> 1.5 screens), and only while you are
+  // inside it with more gallery still below. Clicking it scrolls to just past the gallery.
+  document.querySelectorAll<HTMLElement>('.gallery-wrap').forEach((wrap) => {
+    const skip = wrap.querySelector<HTMLButtonElement>('.gskip')!;
+    let long = false;
+    let hideTimer = 0;
+    let ticking = false;
+    const setShown = (show: boolean) => {
+      if (show === skip.classList.contains('gskip-on')) return;
+      clearTimeout(hideTimer);
+      if (show) {
+        skip.hidden = false;
+        requestAnimationFrame(() => skip.classList.add('gskip-on'));
+      } else {
+        skip.classList.remove('gskip-on');
+        hideTimer = window.setTimeout(() => (skip.hidden = true), 220);
+      }
+    };
+    const update = () => {
+      ticking = false;
+      const r = wrap.getBoundingClientRect();
+      const vh = window.innerHeight;
+      setShown(long && r.top < vh * 0.5 && r.bottom > vh * 1.1);
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    const measure = () => {
+      long = wrap.offsetHeight > window.innerHeight * 1.5;
+      update();
+    };
+    skip.addEventListener('click', () => {
+      const top = wrap.getBoundingClientRect().bottom + window.scrollY - 80;
+      window.scrollTo({ top, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', measure);
+    window.addEventListener('load', measure);
+    measure();
+  });
+</script>
 
 <style>
   .gallery-wrap {
@@ -70,6 +146,15 @@ const full = await Promise.all(
     background: var(--surface);
     cursor: zoom-in;
   }
+  .tile-video {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+  }
   .tile-btn :global(img) {
     width: 100%;
     height: auto;
@@ -79,6 +164,55 @@ const full = await Promise.all(
   .tile-btn:hover :global(img) {
     transform: scale(1.03);
   }
+  /* Floating "Skip gallery" pill, bottom centre, styled like the site's Pill buttons. */
+  .gskip {
+    position: fixed;
+    left: 50%;
+    bottom: max(20px, env(safe-area-inset-bottom));
+    z-index: 40;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 6px 6px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--fg);
+    font: inherit;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    opacity: 0;
+    transform: translate(-50%, 12px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+  }
+  .gskip.gskip-on {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  .gskip-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--on-accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gskip-icon svg {
+    width: 15px;
+    height: 15px;
+  }
+  .gskip:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .gskip:hover .gskip-icon {
+    background: var(--on-accent);
+    color: var(--accent);
+  }
+
   .tile figcaption {
     margin-top: 8px;
     font-size: 14px;

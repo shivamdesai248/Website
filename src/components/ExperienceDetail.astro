@@ -9,7 +9,7 @@ import type { CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PostCard from './PostCard.astro';
 import PhotoTitle from './PhotoTitle.astro';
-import Gallery from './Gallery.astro';
+import Gallery, { type GalleryItem } from './Gallery.astro';
 import Documents, { type DocItem } from './Documents.astro';
 
 interface Props {
@@ -24,7 +24,7 @@ interface Props {
   cover?: ImageMetadata;
   coverAlt?: string;
   coverFit?: 'cover' | 'contain';
-  gallery?: { image: ImageMetadata; alt: string; caption?: string }[];
+  gallery?: GalleryItem[];
   documents?: DocItem[];
   related?: CollectionEntry<'blog'>[];
   next?: { href: string; title: string; label?: string };
@@ -115,7 +115,7 @@ const {
     {
       related.length > 0 && (
         <section class="container related">
-          <p class="label">Related writing</p>
+          <h2 class="h-display h-section">Related writing</h2>
           <div class="rgrid">{related.map((p) => <PostCard post={p} />)}</div>
         </section>
       )
@@ -254,7 +254,7 @@ const {
     padding-bottom: clamp(48px, 7vw, 96px);
   }
   .rgrid {
-    margin-top: 18px;
+    margin-top: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 18px;

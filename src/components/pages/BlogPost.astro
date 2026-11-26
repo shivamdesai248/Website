@@ -52,7 +52,7 @@ const toc = headings.filter((h) => h.depth === 2);
         {
           toc.length > 1 && (
             <>
-              <p class="label">On this page</p>
+              <p class="h-side">On this page</p>
               <ul>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul>
             </>
           )

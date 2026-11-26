@@ -21,7 +21,7 @@ The design was inspired by the wreaths of classical mythology: gold leaves windi
 
 My original plan was more ambitious. I wanted to lay the wreath pattern out and paint over it, so the composite body tubes would show through the design. With last-minute constraints, the paint shop only had time for one solid base coat, so the wreath went on as decals over white instead. Something to keep in mind for future designs.
 
-## 1. Figma: the rocket, unrolled
+## Figma: the rocket, unrolled
 
 A decal for a tube is a flat rectangle: one side is the tube's circumference, the other is the length of that section. So in Figma every section of the airframe became its own panel, sized to the real part: fin can, lower plumbing, pressure vessel, air brakes, avionics bay, recovery and nose cone.
 
@@ -35,7 +35,7 @@ The Figma file became a running board for everything visual on Aegis: livery ver
 
 ![A zoomed-out Figma board with livery strips, renders and many versions of the Aegis poster](./figma-board.png "The working Figma board: livery versions on the left, poster iterations on the right")
 
-## 2. Blender: rough prototypes
+## Blender: rough prototypes
 
 The Blender prototypes were rough, and harder than they should have been. The rocket model came over from SolidWorks as a STEP file, and the mesh it generated broke every surface into long, thin triangles. Mapping a flat decal onto a tube means laying the tube's surface out flat in Blender's UV editor, and with that mesh the "unrolled" surface was a mess of slivers that didn't line up with the artwork.
 
@@ -57,21 +57,27 @@ The first full set of decals, from both sides:
 
 ![Close-up render of the forward section: the end of the AEGIS wordmark, a gold band, the Alberta crest, the SOAR logo and the maple-leaf nose cone](./render-nose-detail.png "The forward section up close")
 
-## 3. Real life
+## Real life
 
 ### Applying the decals
 
-From here my friend and team captain, Andrew, took over the decals. With his work and the whole team's help, they went on while we were at competition, with the rocket laid across a hotel desk and every flat surface covered in tools.
+From here my friend and team captain, Andrew, took over the decals. With his work and the whole team's help, they went on at competition, section by section, in the team trailer and across a hotel desk, with every flat surface covered in tools.
 
-![Aegis lying across a hotel desk with the AEGIS wordmark and University of Calgary decals applied, tools and tape around it](./decals-on-desk.jpg "Decals going on at competition")
+![A team member leaning over the polished pressure vessel, pressing a gold vine decal into place](./apply-pressure-vessel.jpg "Vines going onto the pressure vessel") ![A team member peeling a decal sheet beside a finished section with the AEGIS wordmark](./apply-wordmark.jpg "Peeling the next sheet beside the wordmark")
+
+![Hands smoothing a large clear decal sheet with gold vines onto a white body tube](./apply-decal-sheet.jpg "Smoothing a sheet down") ![A finished section with gold vines in the foreground while team members keep working behind it](./vines-in-trailer.jpg "A finished section, with work carrying on behind")
 
 ![Close-up of the nose cone decals: University of Calgary, 707 and the SOAR logo](./decals-nose.jpg "Nose cone and recovery section") ![Close-up of the AEGIS wordmark and motto with gold vines on the white body tube](./decals-wordmark.jpg "The wordmark and motto")
+
+![The finished Aegis lying across a hotel desk at night, copper nose tip in the foreground and the decals running down the body](./finished-on-desk.jpg "Finished, the night before launch {width=60%}")
+
+![The finished Aegis laid out on stands at the competition hall, the full livery visible from fins to nose cone, with the team poster beside it](./full-decal-hall.jpg "The full livery, end to end, at the competition hall")
 
 ### On the field
 
 ![The team carrying Aegis on their shoulders across a parking lot](/videos/aegis/aegis-carry.mp4#loop "Carrying Aegis out")
 
-![Aegis's nose cone and SOAR logo against a cloudy sky](./nose-against-sky.jpg "Nose cone against the sky") ![Team members standing around Aegis, held upright on the grass under a cloudy sky](./team-with-aegis.jpg "The team with Aegis")
+![Aegis's nose cone and SOAR logo against a cloudy sky](./nose-against-sky.jpg "Nose cone against the sky") ![The upper half of Aegis held upright against blue sky and clouds, showing the SOAR logo, gold vines and AEGIS wordmark](./livery-against-sky.jpg "The full livery in daylight")
 
 ![A slow pan up the sponsor section of Aegis, held by two team members](/videos/aegis/aegis-sponsors.mp4#loop "The sponsor section up close")
 
@@ -79,7 +85,7 @@ From here my friend and team captain, Andrew, took over the decals. With his wor
 
 ![Aegis lying horizontally on the launch rail in the desert while team members prepare it](./on-the-rail.jpg "Loading Aegis onto the rail")
 
-![Aegis standing vertically on the launch tower against a deep blue sky, with Canadian and Alberta flags](./vertical-on-tower.jpg "Vertical on the tower") ![Aegis standing on the rail with the tower's insulated panels swung open, showing the whole rocket from fins to nose cone](./rail-insulation-open.jpg "Insulation open, the whole rocket on the rail")
+![Aegis standing on the rail with the tower's insulated panels swung open, showing the whole rocket from fins to nose cone](./rail-insulation-open.jpg "Insulation open, the whole rocket on the rail {width=60%}")
 
 ## The poster
 

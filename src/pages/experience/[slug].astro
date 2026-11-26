@@ -3,7 +3,8 @@
  * An experience page. Two layouts:
  * - Write-up (default): header, stats, cover, Markdown body, gallery.
  * - Hub: when the experience has tracks (src/content/experience/<slug>/<track>/index.md),
- *   the page shows the hero photo, the intro (Markdown body) and a card per track.
+ *   the page shows the hero photo, the intro (Markdown body), a card per track, then the
+ *   optional `gallery:` photos and documents.
  */
 import { render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
@@ -12,6 +13,7 @@ import PhotoTitle from '../../components/PhotoTitle.astro';
 import ExperienceDetail from '../../components/ExperienceDetail.astro';
 import PostCard from '../../components/PostCard.astro';
 import Documents from '../../components/Documents.astro';
+import Gallery from '../../components/Gallery.astro';
 import { getExperiences, getPosts, getTracks } from '../../lib/content';
 import { url } from '../../lib/url';
 
@@ -104,11 +106,13 @@ const nextLink = { href: url(`/experience/${next.id}`), title: next.data.title }
           ))}
         </section>
 
+        {d.gallery.length > 0 && <Gallery items={d.gallery} />}
+
         {d.documents.length > 0 && <Documents items={d.documents} />}
 
         {related.length > 0 && (
           <section class="container related">
-            <p class="label">Related writing</p>
+            <h2 class="h-display h-section">Related writing</h2>
             <div class="rgrid">{related.map((p) => <PostCard post={p} />)}</div>
           </section>
         )}
@@ -180,7 +184,7 @@ const nextLink = { href: url(`/experience/${next.id}`), title: next.data.title }
     padding-bottom: clamp(48px, 7vw, 96px);
   }
   .rgrid {
-    margin-top: 18px;
+    margin-top: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 18px;
