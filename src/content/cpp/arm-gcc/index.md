@@ -3,9 +3,11 @@ title: ARM GCC
 description: The arm-none-eabi toolchain, what its name means, and the compiler flags that matter for Cortex-M firmware.
 order: 1
 tags: [Toolchain, GCC, Cortex-M]
-# To also list this topic on the Blog page, uncomment both lines:
+# Also list this topic on the Blog page (needs a date). blogCover is the card image there.
 # blog: true
 # date: 2026-11-25
+# blogCover: ./cover.jpg
+# blogCoverAlt: Cutaway render of the AstroPulse Hall effect thruster
 ---
 
 > [!NOTE]

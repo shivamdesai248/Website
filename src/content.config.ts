@@ -174,6 +174,9 @@ const cpp = defineCollection({
       blog: z.boolean().default(false),
       /** Date shown on the blog card and used to sort it among posts. */
       date: z.coerce.date().optional(),
+      /** Image for the blog card only (not shown on the topic page). Falls back to `cover`. */
+      blogCover: image().optional(),
+      blogCoverAlt: z.string().optional(),
     })
     .refine((d) => !d.blog || !!d.date, { message: 'date is required when blog: true', path: ['date'] })
     .refine((d) => !d.cover || !!d.coverAlt, { message: 'coverAlt is required when cover is set', path: ['coverAlt'] }),
