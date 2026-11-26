@@ -1,0 +1,87 @@
+---
+/**
+ * Numbered list of Embedded C++ topics (compact rows like the Design page's Inspiration list).
+ * Used on /cpp and in the optional home-page C++ section.
+ */
+import type { CollectionEntry } from 'astro:content';
+import { url } from '../lib/url';
+
+interface Props {
+  topics: CollectionEntry<'cpp'>[];
+}
+const { topics } = Astro.props;
+const num = (i: number) => String(i + 1).padStart(2, '0');
+---
+<ol class="topics">
+  {topics.map((t, i) => (
+    <li>
+      <a href={url(`/cpp/${t.id}`)}>
+        <span class="num">{num(i)}</span>
+        <span class="t-main">
+          <span class="t-title">
+            {t.data.title} <span class="arr" aria-hidden="true">↗</span>
+          </span>
+          <span class="t-desc">{t.data.description}</span>
+        </span>
+      </a>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .topics {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .topics li {
+    border-top: 1px solid var(--line);
+  }
+  .topics a {
+    display: grid;
+    grid-template-columns: clamp(36px, 4vw, 56px) minmax(0, 1fr);
+    gap: 12px;
+    align-items: baseline;
+    padding-block: 18px;
+    text-decoration: none;
+    color: var(--fg);
+  }
+  .num {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--accent-ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .t-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  /* Same size as the Inspiration names on the Design page. */
+  .t-title {
+    font-size: clamp(20px, 1.8vw, 24px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    transition: color 0.2s ease;
+  }
+  .arr {
+    color: var(--accent-ink);
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .t-desc {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 62ch;
+  }
+  .topics a:hover .t-title,
+  .topics a:focus-visible .t-title {
+    color: var(--accent-ink);
+  }
+  .topics a:hover .arr {
+    transform: translate(2px, -2px);
+  }
+</style>

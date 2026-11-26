@@ -21,6 +21,19 @@ export async function getPosts(): Promise<CollectionEntry<'blog'>[]> {
   );
 }
 
+export type FeedItem = CollectionEntry<'blog'> | CollectionEntry<'cpp'>;
+
+/**
+ * Everything listed on the Blog page: blog posts plus any C++ topics marked `blog: true`
+ * (only while the C++ section is on), newest first.
+ */
+export async function getFeed(): Promise<FeedItem[]> {
+  const posts: FeedItem[] = await getPosts();
+  if (!site.features.blog) return [];
+  const cpp: FeedItem[] = (await getCppTopics()).filter((t) => t.data.blog && t.data.date);
+  return [...posts, ...cpp].sort((a, b) => (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0));
+}
+
 /** Published design items, newest first. Empty when the design flag is off. */
 export async function getDesignItems(): Promise<CollectionEntry<'design'>[]> {
   if (!site.features.design) return [];

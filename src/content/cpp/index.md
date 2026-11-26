@@ -1,6 +1,6 @@
 ---
 title: Embedded C++
-intro: A space for me to gather and share what I know about using C++ for firmware development. The notes draw on textbooks, conference talks such as CppCon, and other sources across the web.
+intro: A space for me to gather and share what I know about using C++ specifically for embedded development. The notes draw on textbooks, conference talks such as CppCon, and other sources across the web.
 description: Notes on using modern C++ for firmware, from the toolchain and the build to the language and library features that are safe to use on a microcontroller.
 ---
 

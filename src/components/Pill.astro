@@ -5,9 +5,21 @@ interface Props {
   variant?: 'primary' | 'secondary';
   size?: 'sm' | 'md';
   external?: boolean;
+  /**
+   * Badge arrow: 'out' (↗) for links to another page, 'down' (↓) for jumps within the page.
+   * Left out, it picks itself: ↓ when the link is a #section on the current page, else ↗.
+   */
+  arrow?: 'out' | 'down';
   class?: string;
 }
 const { href, variant = 'primary', size = 'md', external = false, class: cls = '' } = Astro.props;
+const samePageJump = (() => {
+  if (external || !href.includes('#')) return false;
+  if (href.startsWith('#')) return true;
+  const path = href.split('#')[0].replace(/\/$/, '');
+  return path === Astro.url.pathname.replace(/\/$/, '');
+})();
+const arrow = Astro.props.arrow ?? (samePageJump ? 'down' : 'out');
 ---
 <a
   href={href}
@@ -16,7 +28,7 @@ const { href, variant = 'primary', size = 'md', external = false, class: cls = '
 >
   <span class="pill-text"><slot /></span>
   <span class="pill-dot" aria-hidden="true">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 11 11 5M6 5h5v5" /></svg>
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d={arrow === 'down' ? 'M8 3v10M4 9l4 4 4-4' : 'M5 11 11 5M6 5h5v5'} /></svg>
   </span>
 </a>
 <style>

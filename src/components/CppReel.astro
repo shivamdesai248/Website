@@ -1,0 +1,172 @@
+---
+/**
+ * Home-page C++ section: a sideways-scrolling reel of cards.
+ * First card = Introduction (opens /cpp), then up to `max` topic cards, then an
+ * "All topics" card when there are more topics than that.
+ */
+import type { CollectionEntry } from 'astro:content';
+import { url } from '../lib/url';
+
+interface Props {
+  topics: CollectionEntry<'cpp'>[];
+  /** Short text for the Introduction card. */
+  intro: string;
+  /** Most topic cards to show before the "All topics" card. */
+  max?: number;
+}
+const { topics, intro, max = 10 } = Astro.props;
+const shown = topics.slice(0, max);
+const more = topics.length - shown.length;
+---
+<div class="creel" data-creel>
+  <ul class="ctrack">
+    <li>
+      <a class="ccard ccard-intro" href={url('/cpp')}>
+        <span class="c-title">Introduction</span>
+        <span class="c-desc">{intro}</span>
+      </a>
+    </li>
+    {shown.map((t) => (
+      <li>
+        <a class="ccard" href={url(`/cpp/${t.id}`)}>
+          <span class="c-title">{t.data.title}</span>
+          <span class="c-desc">{t.data.description}</span>
+        </a>
+      </li>
+    ))}
+    {more > 0 && (
+      <li>
+        <a class="ccard ccard-all" href={url('/cpp#topics')}>
+          <span class="c-title">All topics</span>
+          <span class="c-desc">{more} more {more === 1 ? 'topic' : 'topics'} in the full list of Embedded C++ notes.</span>
+        </a>
+      </li>
+    )}
+  </ul>
+  <button type="button" class="cnav cprev" aria-label="Scroll back" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 5l-7 7 7 7" /></svg>
+  </button>
+  <button type="button" class="cnav cnext" aria-label="Scroll forward" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7" /></svg>
+  </button>
+</div>
+
+<script>
+  // Arrows show only when the reel overflows, and hide at each end.
+  document.querySelectorAll<HTMLElement>('[data-creel]').forEach((reel) => {
+    const track = reel.querySelector<HTMLElement>('.ctrack')!;
+    const prev = reel.querySelector<HTMLButtonElement>('.cprev')!;
+    const next = reel.querySelector<HTMLButtonElement>('.cnext')!;
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      prev.hidden = track.scrollLeft <= 2;
+      next.hidden = track.scrollLeft >= max - 2;
+    };
+    const step = (dir: number) => track.scrollBy({ left: dir * track.clientWidth * 0.8, behavior: 'smooth' });
+    prev.addEventListener('click', () => step(-1));
+    next.addEventListener('click', () => step(1));
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    window.addEventListener('load', update);
+    update();
+  });
+</script>
+
+<style>
+  .creel {
+    position: relative;
+  }
+  /* Room above and below so the hover lift and borders aren't clipped by the scroll area. */
+  .ctrack {
+    list-style: none;
+    margin: -8px 0 0;
+    padding: 8px 0 8px;
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .ctrack::-webkit-scrollbar {
+    display: none;
+  }
+  .ctrack li {
+    flex: none;
+    width: clamp(250px, 24vw, 300px);
+    scroll-snap-align: start;
+  }
+  .ccard {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+    color: var(--fg);
+    text-decoration: none;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .ccard:hover {
+    border-color: var(--line-strong);
+    transform: translateY(-3px);
+  }
+  .c-title {
+    font-size: clamp(20px, 1.8vw, 24px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    transition: color 0.2s ease;
+  }
+  .c-desc {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ccard:hover .c-title {
+    color: var(--accent-ink);
+  }
+  .cnav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--fg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .cnav[hidden] {
+    display: none;
+  }
+  .cnav:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .cnav svg {
+    width: 18px;
+    height: 18px;
+  }
+  .cprev {
+    left: -12px;
+  }
+  .cnext {
+    right: -12px;
+  }
+  @media (hover: none) {
+    .cnav {
+      display: none;
+    }
+  }
+</style>

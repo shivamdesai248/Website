@@ -17,9 +17,9 @@ function flag(name: string, fallback: boolean): boolean {
 }
 
 /** Sections the home page can show (see `homeSections` below). */
-export type HomeSection = 'about' | 'experience' | 'design' | 'blog' | 'contact';
+export type HomeSection = 'about' | 'experience' | 'design' | 'blog' | 'cpp' | 'contact';
 /** Links the top bar can show (see `navExtra` below). */
-export type NavItem = HomeSection | 'cpp';
+export type NavItem = HomeSection;
 
 export const site = {
   name: 'Shivam Desai',
@@ -46,7 +46,7 @@ export const site = {
     /** Design gallery page and nav link (and its home section, if listed in homeSections). */
     design: flag('SITE_DESIGN', true),
     /** Embedded C++ notes: /cpp hub, topic pages and nav link. */
-    cpp: flag('SITE_CPP', false),
+    cpp: flag('SITE_CPP', true),
     /** Light/dark toggle. When false the site is the default mode only. */
     themeToggle: flag('SITE_THEME_TOGGLE', true),
     /** Include posts/items marked `draft: true` (for previewing only — keep false). */
@@ -57,10 +57,10 @@ export const site = {
 
   /**
    * Home page sections, top to bottom. Reorder to move them; delete a name to hide it.
-   * Available: 'about', 'experience', 'design', 'blog', 'contact'.
-   * 'design' and 'blog' also need their feature above to be on.
+   * Available: 'about', 'experience', 'design', 'blog', 'cpp', 'contact'.
+   * 'design', 'blog' and 'cpp' also need their feature above to be on.
    */
-  homeSections: ['about', 'experience', 'blog', 'design', 'contact'] as HomeSection[],
+  homeSections: ['about', 'experience', 'blog', 'design', 'cpp', 'contact'] as HomeSection[],
 
   /**
    * Top bar order: first every section in `homeSections` above, in the same order

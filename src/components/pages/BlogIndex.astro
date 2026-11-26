@@ -1,10 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
 import PostCard from '../PostCard.astro';
-import { getPosts } from '../../lib/content';
+import { getFeed } from '../../lib/content';
 import { blogIntro } from '../../data/intros';
 
-const posts = await getPosts();
+const posts = await getFeed();
 ---
 <Base title="Blog" description="Write-ups on embedded software, rockets and hardware by Shivam Desai.">
   <section class="container head">

@@ -5,14 +5,18 @@ import { url } from '../lib/url';
 import { formatDate, readingTime } from '../lib/content';
 
 interface Props {
-  post: CollectionEntry<'blog'>;
+  /** A blog post, or a C++ topic marked `blog: true` (links to its /cpp page). */
+  post: CollectionEntry<'blog'> | CollectionEntry<'cpp'>;
 }
 const { post } = Astro.props;
 const d = post.data;
+const isCpp = post.collection === 'cpp';
+const href = url(isCpp ? `/cpp/${post.id}` : `/blog/${post.id}`);
+const meta = [d.date && formatDate(d.date), isCpp && 'Embedded C++', readingTime(post.body)].filter(Boolean).join(' · ');
 ---
-<a href={url(`/blog/${post.id}`)} class="pcard">
+<a href={href} class="pcard">
   {d.cover && <div class="media"><Image src={d.cover} alt={d.coverAlt ?? ''} widths={[480, 800]} sizes="(max-width: 760px) 100vw, 33vw" /></div>}
-  <p class="label meta">{formatDate(d.date)} · {readingTime(post.body)}</p>
+  <p class="label meta">{meta}</p>
   <h3 class="title">{d.title}</h3>
   <p class="desc">{d.description}</p>
 </a>

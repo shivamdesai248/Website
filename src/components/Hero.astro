@@ -26,6 +26,7 @@ const [first, last] = site.name.toUpperCase().split(' ');
       {/* Primary button: the blog when it's on, otherwise About. Secondary jumps to Experience. */}
       {site.features.blog ? <Pill href={url('/blog')}>Read the blog</Pill> : <Pill href={url('/#about')}>About me</Pill>}
       <Pill href={url('/#experience')} variant="secondary">Experience</Pill>
+      {site.homeSections.includes('contact') && <Pill href={url('/#contact')} variant="secondary" arrow="down">Contact</Pill>}
     </div>
   </div>
 </section>
@@ -147,6 +148,22 @@ const [first, last] = site.name.toUpperCase().split(' ');
   }
 
   /* Phone: photo across the top, text below */
+  /* Phone: the first button spans the full width, the others share the row below
+     (two halves; a lone second button spans the full width too). */
+  @media (max-width: 700px) {
+    .ctas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .ctas > :global(.pill:first-child),
+    .ctas > :global(.pill:nth-child(2):last-child) {
+      grid-column: 1 / -1;
+    }
+    .ctas > :global(.pill) {
+      justify-content: space-between;
+    }
+  }
+
   @media (max-width: 700px) {
     .hero {
       display: block;

@@ -158,7 +158,8 @@ const cppHome = defineCollection({
 const cpp = defineCollection({
   loader: glob({ pattern: '*/index.{md,mdx}', base: './src/content/cpp', generateId: ({ entry }) => entry.split('/')[0] }),
   schema: ({ image }) =>
-    z.object({
+    z
+      .object({
       title: z.string(),
       description: z.string(),
       /** Position in the topic list (1 = first). */
@@ -169,7 +170,13 @@ const cpp = defineCollection({
       coverAlt: z.string().optional(),
       documents,
       draft: z.boolean().default(false),
-    }),
+      /** true = also list this topic on the Blog page (and the home Blog section). Needs `date`. */
+      blog: z.boolean().default(false),
+      /** Date shown on the blog card and used to sort it among posts. */
+      date: z.coerce.date().optional(),
+    })
+    .refine((d) => !d.blog || !!d.date, { message: 'date is required when blog: true', path: ['date'] })
+    .refine((d) => !d.cover || !!d.coverAlt, { message: 'coverAlt is required when cover is set', path: ['coverAlt'] }),
 });
 
 export const collections = { experience, tracks, blog, design, cppHome, cpp };

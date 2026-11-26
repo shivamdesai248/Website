@@ -212,6 +212,10 @@ a {
 /* Space taken by the fixed top bar when scrolled. Sticky elements and anchor
    targets use these so nothing hides under the bar. */
 :root {
+  /* White product-shot panel (Garmin heroStrip): the same in both themes, like photos. */
+  --panel-white: #fff;
+  --panel-white-fg: #0a0a0a;
+  --panel-white-muted: #55554f;
   /* How wide intro paragraphs run when nothing sits beside them (home section intros,
      experience and blog summaries, page intros). Change here to change them all. */
   --intro-w: 940px;

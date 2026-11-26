@@ -183,7 +183,7 @@ const {
     gap: clamp(8px, 2vw, 32px);
     aspect-ratio: 16 / 7;
     padding: clamp(16px, 2.2vw, 32px) clamp(20px, 3vw, 48px);
-    background: #fff;
+    background: var(--panel-white);
     border: 1px solid var(--line);
     border-radius: 20px;
     overflow: hidden;
@@ -223,13 +223,13 @@ const {
   }
   .spt .meta {
     margin: 0 0 12px;
-    color: #55554f;
+    color: var(--panel-white-muted);
   }
   .spt .title {
     margin: 0;
     font-size: clamp(40px, 6.4vw, 96px);
     max-width: 14ch;
-    color: #0a0a0a;
+    color: var(--panel-white-fg);
   }
   /* Phone: products only in the panel, then the text below in normal colours. */
   @media (max-width: 760px) {
